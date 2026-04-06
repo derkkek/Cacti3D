@@ -1,0 +1,42 @@
+#pragma once
+
+namespace Cacti
+{
+	enum ShapeType
+	{
+		SPHERE
+	};
+
+	class Shape
+	{
+	public:
+		Shape();
+		~Shape();
+
+		const virtual ShapeType GetType() = 0;
+
+	private:
+
+	};
+
+	class Sphere : public Shape
+	{
+	public:
+		Sphere(float radius)
+			:radius(radius)
+		{
+
+		}
+		~Sphere();
+
+		const ShapeType GetType()
+		{
+			return SPHERE;
+		}
+
+		float radius;
+	private:
+
+	};
+
+}
