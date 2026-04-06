@@ -21,6 +21,7 @@ namespace Cacti
 		for (int i = 0; i < world.bodies.size(); i++)
 		{
 			transformBuffer.positions[i] = world.bodies[i].position;
+			transformBuffer.orientations[i] = world.bodies[i].orientation;
 		}
 	}
 

@@ -10,8 +10,8 @@ namespace Cacti
 	class Shape
 	{
 	public:
-		Shape();
-		~Shape();
+		Shape() = default;
+		~Shape() = default;
 
 		const virtual ShapeType GetType() = 0;
 

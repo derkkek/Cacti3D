@@ -271,17 +271,17 @@ void Renderer::Update(ConvertedSceneData& convertedSceneData)
 
 		//BoundingBox bb{};
 		
-		const BoundingBox bb = convertedSceneData.bbs[i];
+		//const BoundingBox bb = convertedSceneData.bbs[i];
 
-		if (convertedSceneData.bbIndexCollided[i])
-		{
-			
-			DrawBoundingBox(bb, RED);
-		}
-		else
-		{
-			DrawBoundingBox(bb, GREEN);
-		}
+		//if (convertedSceneData.bbIndexCollided[i])
+		//{
+		//	
+		//	DrawBoundingBox(bb, RED);
+		//}
+		//else
+		//{
+		//	DrawBoundingBox(bb, GREEN);
+		//}
 	}
 
 

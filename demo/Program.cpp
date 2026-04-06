@@ -37,10 +37,10 @@ void Program::Init()
 
 void Program::InitScene()
 {
-	//renderer.sceneObjects.reserve(engine.world.bodies.size());
+	renderer.sceneObjects.reserve(engine.world.bodies.size());
 
-	//convertedSceneData.positions.resize(engine.transformBuffer.positions.size());
-	//convertedSceneData.orientations.resize(engine.transformBuffer.orientations.size());
+	convertedSceneData.positions.resize(engine.transformBuffer.positions.size());
+	convertedSceneData.orientations.resize(engine.transformBuffer.orientations.size());
 	//convertedSceneData.bbs.resize(engine.world.bodies.size());
 	//convertedSceneData.bbIndexCollided.resize(engine.world.bodies.size());
 
@@ -72,7 +72,8 @@ void Program::Update()
 		for (int i = 0; i < engine.world.bodies.size(); i++)
 		{
 			const Cacti::Vec3 p = engine.transformBuffer.positions[i];
-			/*const Cacti::Quat q = engine.transformBuffer.orientations[i];
+			const Cacti::Quat q = engine.transformBuffer.orientations[i];
+			/*
 			const Cacti::Bounds boundingBox = engine.transformBuffer.boundingBoxes[i];
 
 			BoundingBox bb{};
@@ -86,9 +87,9 @@ void Program::Update()
 			bb.min.z = engine.transformBuffer.boundingBoxes[i].mins.z;*/
 
 			convertedSceneData.positions[i] = { p.x, p.y, p.z };
-			/*convertedSceneData.orientations[i] = { q.x, q.y , q.z, q.w };
-			convertedSceneData.bbs[i] = { bb };
-			convertedSceneData.bbIndexCollided[i] = engine.transformBuffer.boundingBoxes[i].collided;*/
+			convertedSceneData.orientations[i] = { q.x, q.y , q.z, q.w };
+			//convertedSceneData.bbs[i] = { bb };
+			//convertedSceneData.bbIndexCollided[i] = engine.transformBuffer.boundingBoxes[i].collided;*/
 		}
 
 		renderer.Update(convertedSceneData);
@@ -281,5 +282,5 @@ RenderModel Program::BuildRenderModelFromPhysicsGeometry(Cacti::Body body, Cacti
 	//	return RenderModel(model, randomColor, raylibPos);
 	//}
 
-	//return RenderModel();
+	return RenderModel();
 }
