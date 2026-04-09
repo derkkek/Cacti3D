@@ -27,6 +27,7 @@ namespace Cacti
 
 	void Engine::Update(float dt)
 	{
+		world.Update(dt);
 		UpdateTransformBuffer();
 	}
 }

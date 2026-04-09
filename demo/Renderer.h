@@ -14,8 +14,6 @@ struct ConvertedSceneData
 {
 	std::vector<Vector3> positions;
 	std::vector<Quaternion> orientations;
-	std::vector<BoundingBox> bbs;
-	std::vector<bool> bbIndexCollided;
 };
 
 
@@ -43,7 +41,7 @@ public:
 
 	void AddSceneObject(RenderModel& obj);
 
-	std::vector<RenderModel > sceneObjects;
+	std::vector<RenderModel> sceneObjects;
 
 private:
 	TextureCubemap GenTextureCubemap(Shader shader, Texture2D panorama, int size, int format);

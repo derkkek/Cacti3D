@@ -11,7 +11,14 @@ namespace Cacti
 	void World::Init()
 	{
 		bodies.reserve(MaxBodies);
-		bodies.emplace_back(new Sphere(5), Vec3(0, 0, 0));
+		bodies.emplace_back(new Sphere(1), Vec3(0, 0, 0));
 
+	}
+	void World::Update(float dt)
+	{
+		for (int i = 0; i < bodies.size(); i++)
+		{
+			bodies[i].position.x += 1 * dt;
+		}
 	}
 }

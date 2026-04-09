@@ -10,7 +10,8 @@ namespace Cacti
 		~World();
 
 		void Init();
-		//void AddBody();
+		void Update(float dt);
+
 		std::vector<Body> bodies;
 
 		const int MaxBodies = 100;

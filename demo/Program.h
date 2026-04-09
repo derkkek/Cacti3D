@@ -1,11 +1,8 @@
 #pragma once
 #include "raylib.h"
 #include <vector>
-#include <string>
-#include <unordered_map>
 #include "Renderer.h"
 #include <Engine.h>
-
 
 class Program
 {
@@ -18,7 +15,7 @@ public:
 	void InitScene();
 private:
 	void Init();
-	static RenderModel BuildRenderModelFromPhysicsGeometry(Cacti::Body body, Cacti::Shape* shape);
+	RenderModel BuildRenderModelFromPhysicsGeometry(Cacti::Body body, Cacti::Shape* shape);
 
 	Renderer renderer;
 	Cacti::Engine engine;

@@ -10,7 +10,6 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(raylib)
 
-# Physics static library — no raylib dependency, pure logic
 file(GLOB_RECURSE PHYSICS_SOURCES src/*.cpp)
 
 add_library(physics STATIC ${PHYSICS_SOURCES})
@@ -19,7 +18,6 @@ target_include_directories(physics
     PUBLIC src  # expose headers to consumers
 )
 
-# Demo executable — only this layer knows about raylib
 file(GLOB_RECURSE DEMO_SOURCES demo/*.cpp)
 
 add_executable(demo ${DEMO_SOURCES})

@@ -268,23 +268,7 @@ void Renderer::Update(ConvertedSceneData& convertedSceneData)
 	for (int i = 0; i < sceneObjects.size(); i++)
 	{
 		sceneObjects[i].Draw(convertedSceneData.positions[i], convertedSceneData.orientations[i]);
-
-		//BoundingBox bb{};
-		
-		//const BoundingBox bb = convertedSceneData.bbs[i];
-
-		//if (convertedSceneData.bbIndexCollided[i])
-		//{
-		//	
-		//	DrawBoundingBox(bb, RED);
-		//}
-		//else
-		//{
-		//	DrawBoundingBox(bb, GREEN);
-		//}
 	}
-
-
 
 	EndMode3D();
 	DrawFPS(10, 10);
@@ -319,7 +303,6 @@ void RenderModel::Draw(const Vector3 pos, const Quaternion& orient)
 {
 	Vector3 axis;
 	float angle;
- 	//orientation.ToAxisAngle(axis, angle);
 	QuaternionToAxisAngle(orient, &axis, &angle);
 	float angleDeg = angle * RAD2DEG;
 	Vector3 raylibAxis = { axis.x, axis.y, axis.z };
