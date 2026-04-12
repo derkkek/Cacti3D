@@ -11,7 +11,8 @@ namespace Cacti
 	void World::Init()
 	{
 		bodies.reserve(MaxBodies);
-		bodies.emplace_back(new Sphere(1), Vec3(0, 0, 0));
+		bodies.emplace_back(std::make_unique<Sphere>(1), Vec3(0, 3, 0));
+		bodies.emplace_back(std::make_unique<Sphere>(100), Vec3(0, -100, 0));
 
 	}
 	void World::Update(float dt)

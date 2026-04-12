@@ -41,7 +41,7 @@ void Program::InitScene()
 
 	for (int i = 0; i < engine.world.bodies.size(); i++) 
 	{
-		RenderModel sceneObject = BuildRenderModelFromPhysicsGeometry(engine.world.bodies[i], engine.world.bodies[i].shape);
+		RenderModel sceneObject = BuildRenderModelFromPhysicsGeometry(engine.world.bodies[i], engine.world.bodies[i].shape.get());
 		renderer.AddSceneObject(sceneObject);
 	}
 
@@ -75,7 +75,7 @@ void Program::Destroy()
 	CloseWindow();
 }
 
-RenderModel Program::BuildRenderModelFromPhysicsGeometry(Cacti::Body body, Cacti::Shape* shape)
+RenderModel Program::BuildRenderModelFromPhysicsGeometry(Cacti::Body& body, Cacti::Shape* shape)
 {
 	static const Color colorList[] = {
 	LIGHTGRAY, GRAY, DARKGRAY, YELLOW, GOLD, ORANGE, PINK, RED, MAROON,
@@ -94,7 +94,7 @@ RenderModel Program::BuildRenderModelFromPhysicsGeometry(Cacti::Body body, Cacti
 		Model sphere = LoadModelFromMesh(GenMeshSphere(sphereShape->radius, 50, 50));
 		Vector3 raylibPos = { body.position.x, body.position.y, body.position.z };
 		Color randomColor = colorList[dist(gen)];
-		RenderModel sphereObj{ sphere, randomColor, raylibPos };
+		RenderModel sphereObj{ sphere, randomColor};
 
 		return sphereObj;
 	}

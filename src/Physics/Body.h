@@ -2,17 +2,17 @@
 #include "../Math/Vector.h"
 #include "../Math/Quat.h"
 #include "Shapes.h"
+#include <memory>
 namespace Cacti
 {
 	class Body
 	{
 	public:
-		Body(Shape* shape, Vec3 position);
-		~Body();
+		Body(std::unique_ptr<Shape> shape, Vec3 position);
 
 		Vec3 position;
 		Quat orientation;
-		Shape* shape;
+		std::unique_ptr<Shape> shape;
 	private:
 	};
 

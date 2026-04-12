@@ -27,7 +27,7 @@ namespace Cacti
 		{
 
 		}
-		~Sphere();
+		~Sphere() = default;
 
 		const ShapeType GetType()
 		{

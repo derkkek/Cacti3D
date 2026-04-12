@@ -15,7 +15,7 @@ public:
 	void InitScene();
 private:
 	void Init();
-	RenderModel BuildRenderModelFromPhysicsGeometry(Cacti::Body body, Cacti::Shape* shape);
+	RenderModel BuildRenderModelFromPhysicsGeometry(Cacti::Body& body, Cacti::Shape* shape);
 
 	Renderer renderer;
 	Cacti::Engine engine;

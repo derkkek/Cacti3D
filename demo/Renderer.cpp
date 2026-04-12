@@ -293,7 +293,7 @@ void Renderer::AddSceneObject(RenderModel& obj)
 	sceneObjects.emplace_back(obj);
 }
 
-RenderModel::RenderModel(Model& model, Color color, Vector3 pos)
+RenderModel::RenderModel(Model& model, Color color)
 	:model(model), color(color)
 {
 
