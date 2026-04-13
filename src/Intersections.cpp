@@ -31,6 +31,7 @@ namespace Cacti
 
 				contact.localPointA = bodyA.WorldSpaceToLocalSpace(worldCollisionPointA);
 				contact.localPointB = bodyB.WorldSpaceToLocalSpace(worldCollisionPointB);
+
 				return true;
 			}
 
