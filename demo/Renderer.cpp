@@ -285,12 +285,11 @@ void Renderer::Update(ConvertedSceneData& convertedSceneData)
 		
 		Vector3 n = { convertedSceneData.contacts[i].normal.x, convertedSceneData.contacts[i].normal.y, convertedSceneData.contacts[i].normal.z };
 
-		Vector3 contactPointA = { wA.x + lpA.x, wA.y + lpA.y, wA.z + lpA.z };
 
 		Vector3 normalEnd = {
-			contactPointA.x + n.x,
-			contactPointA.y + n.y,
-			contactPointA.z + n.z
+			wA.x + n.x,
+			wA.y + n.y,
+			wA.z + n.z
 		};
 
 		DrawSphere(wA, 0.1f, RED);
