@@ -270,16 +270,33 @@ void Renderer::Update(ConvertedSceneData& convertedSceneData)
 		sceneObjects[i].Draw(convertedSceneData.positions[i], convertedSceneData.orientations[i]);
 	}
 
+	rlDisableShader();
+	rlActiveTextureSlot(0);          // reset active slot
+	rlDisableTexture();              // unbind shadow map texture
+	rlEnableBackfaceCulling();
+	rlEnableDepthMask();
+
 	for (int i = 0; i < convertedSceneData.contacts.size(); i++)
 	{
+		Vector3 wA = convertedSceneData.contacts[i].worldPointA;
+		Vector3 wB = convertedSceneData.contacts[i].worldPointB;
 		Vector3 lpA = convertedSceneData.contacts[i].localPointA;
 		Vector3 lpB = convertedSceneData.contacts[i].localPointB;
-		//DrawPoint3D(lpA, RED);
-		//DrawPoint3D(lpB, RED);
+		
+		Vector3 n = { convertedSceneData.contacts[i].normal.x, convertedSceneData.contacts[i].normal.y, convertedSceneData.contacts[i].normal.z };
 
-		//DrawCircle3D(lpA, 1, Vector3(1,0,0), 0, RED);
-		DrawSphere(lpA, 0.2, RED);
-		DrawSphere(lpB, 0.2, GREEN);
+		Vector3 contactPointA = { wA.x + lpA.x, wA.y + lpA.y, wA.z + lpA.z };
+
+		Vector3 normalEnd = {
+			contactPointA.x + n.x,
+			contactPointA.y + n.y,
+			contactPointA.z + n.z
+		};
+
+		DrawSphere(wA, 0.1f, RED);
+		DrawSphere(wB, 0.1f, RED);
+
+		DrawLine3D(wA, normalEnd, GREEN);
 	}
 
 	EndMode3D();
@@ -319,6 +336,6 @@ void RenderModel::Draw(const Vector3 pos, const Quaternion& orient)
 	float angleDeg = angle * RAD2DEG;
 	Vector3 raylibAxis = { axis.x, axis.y, axis.z };
 
-	DrawModelEx(this->model, pos, raylibAxis, angleDeg, Vector3One(), this->color);
+	DrawModelWiresEx(this->model, pos, raylibAxis, angleDeg, Vector3One(), this->color);
 }
 

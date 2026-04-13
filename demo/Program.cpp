@@ -20,8 +20,8 @@ Program::Program()
 
 void Program::Init()
 {
-	const int screenWidth = 1800;
-	const int screenHeight = 800;
+	const int screenWidth = 1920;
+	const int screenHeight = 1080;
 
 	SetConfigFlags(FLAG_MSAA_4X_HINT);
 
@@ -38,7 +38,6 @@ void Program::InitScene()
 
 	convertedSceneData.positions.resize(engine.transformBuffer.positions.size());
 	convertedSceneData.orientations.resize(engine.transformBuffer.orientations.size());
-	convertedSceneData.contacts.resize(20);
 
 	for (int i = 0; i < engine.world.bodies.size(); i++) 
 	{
@@ -57,7 +56,8 @@ void Program::Update()
 	{
 		float dt = GetFrameTime();
 		engine.Update(dt);
-		
+		convertedSceneData.contacts.resize(engine.world.contacts.size());
+
 		for (int i = 0; i < engine.world.bodies.size(); i++)
 		{
 			const Cacti::Vec3 p = engine.transformBuffer.positions[i];
@@ -73,8 +73,16 @@ void Program::Update()
 			const Cacti::Vec3 lpA = engine.contactBuffer.contacts[i].localPointA;
 			const Cacti::Vec3 lpB = engine.contactBuffer.contacts[i].localPointB;
 
+			const Cacti::Vec3 wpA = engine.contactBuffer.contacts[i].worldPointA;
+			const Cacti::Vec3 wpB = engine.contactBuffer.contacts[i].worldPointB;
+
+			const Cacti::Vec3 n = engine.contactBuffer.contacts[i].normal;
+
 			convertedSceneData.contacts[i].localPointA = {lpA.x, lpA.y, lpA.z};
 			convertedSceneData.contacts[i].localPointB = { lpB.x, lpB.y, lpB.z };
+			convertedSceneData.contacts[i].worldPointA = { wpA.x, wpA.y, wpA.z };
+			convertedSceneData.contacts[i].worldPointB = { wpB.x, wpB.y, wpB.z };
+			convertedSceneData.contacts[i].normal = { n.x, n.y, n.z };
 		}
 
 		renderer.Update(convertedSceneData);

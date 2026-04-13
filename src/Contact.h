@@ -8,6 +8,8 @@ namespace Cacti
 	{
 		Vec3 localPointA;
 		Vec3 localPointB;
+		Vec3 worldPointA;
+		Vec3 worldPointB;
 
 		Vec3 normal;
 

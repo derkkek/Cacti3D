@@ -15,6 +15,9 @@ struct ContactData
 {
 	Vector3 localPointA;
 	Vector3 localPointB;
+	Vector3 worldPointA;
+	Vector3 worldPointB;
+	Vector3 normal;
 };
 
 struct ConvertedSceneData

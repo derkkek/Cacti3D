@@ -21,7 +21,7 @@ namespace Cacti
 		std::vector<Contact> contacts;
 		void Init()
 		{
-			contacts.resize(1);
+			contacts.resize(100);
 		}
 	};
 }

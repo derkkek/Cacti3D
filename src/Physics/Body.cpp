@@ -8,7 +8,6 @@ namespace Cacti
 	{
 	}
 
-	/*TODO*/
 	Vec3 Body::WorldSpaceToLocalSpace(const Vec3 p)
 	{
 		Vec3 localPointTransformPosition = p - position;

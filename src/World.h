@@ -18,6 +18,7 @@ namespace Cacti
 
 		const int MaxBodies = 100;
 
+		float time = 0;
 	private:
 
 	};

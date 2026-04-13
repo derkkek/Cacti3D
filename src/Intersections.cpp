@@ -23,10 +23,11 @@ namespace Cacti
 				Vec3 ab = bodyB.position - bodyA.position;
 				contact.normal = ab.Normalize();
 
-
-				// TODO: -->
 				Vec3 worldCollisionPointA = bodyA.position + contact.normal * sphereA->radius;
 				Vec3 worldCollisionPointB = bodyB.position - contact.normal * sphereB->radius;
+
+				contact.worldPointA = worldCollisionPointA;
+				contact.worldPointB = worldCollisionPointB;
 
 				contact.localPointA = bodyA.WorldSpaceToLocalSpace(worldCollisionPointA);
 				contact.localPointB = bodyB.WorldSpaceToLocalSpace(worldCollisionPointB);
