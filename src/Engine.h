@@ -19,8 +19,10 @@ namespace Cacti
 
 		World world;
 		TransformBuffer transformBuffer;
+		ContactBuffer contactBuffer;
 	private:
 		void UpdateTransformBuffer();
+		void UpdateContactBuffer();
 	};
 
 }

@@ -7,13 +7,21 @@
 #include <vector>
 #include <unordered_map>
 #include <string>
+#include <Contact.h>
 
 #define SHADOWMAP_RESOLUTION 2048
+
+struct ContactData
+{
+	Vector3 localPointA;
+	Vector3 localPointB;
+};
 
 struct ConvertedSceneData
 {
 	std::vector<Vector3> positions;
 	std::vector<Quaternion> orientations;
+	std::vector<ContactData> contacts;
 };
 
 

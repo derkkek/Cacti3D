@@ -270,6 +270,18 @@ void Renderer::Update(ConvertedSceneData& convertedSceneData)
 		sceneObjects[i].Draw(convertedSceneData.positions[i], convertedSceneData.orientations[i]);
 	}
 
+	for (int i = 0; i < convertedSceneData.contacts.size(); i++)
+	{
+		Vector3 lpA = convertedSceneData.contacts[i].localPointA;
+		Vector3 lpB = convertedSceneData.contacts[i].localPointB;
+		//DrawPoint3D(lpA, RED);
+		//DrawPoint3D(lpB, RED);
+
+		//DrawCircle3D(lpA, 1, Vector3(1,0,0), 0, RED);
+		DrawSphere(lpA, 0.2, RED);
+		DrawSphere(lpB, 0.2, GREEN);
+	}
+
 	EndMode3D();
 	DrawFPS(10, 10);
 	EndDrawing();

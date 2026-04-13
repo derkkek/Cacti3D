@@ -14,6 +14,7 @@ namespace Cacti
 	{
 		world.Init();
 		transformBuffer.Init(world.MaxBodies);
+		contactBuffer.Init();
 	}
 
 	void Cacti::Engine::UpdateTransformBuffer()
@@ -25,9 +26,18 @@ namespace Cacti
 		}
 	}
 
+	void Engine::UpdateContactBuffer()
+	{
+		for (int i = 0; i < world.contacts.size(); i++)
+		{
+			contactBuffer.contacts[i] = world.contacts[i];
+		}
+	}
+
 	void Engine::Update(float dt)
 	{
 		world.Update(dt);
 		UpdateTransformBuffer();
+		UpdateContactBuffer();
 	}
 }

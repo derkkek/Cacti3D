@@ -1,6 +1,7 @@
 #pragma once
 #include "Physics/Body.h"
 #include <vector>
+#include "Contact.h"
 namespace Cacti
 {
 	class World
@@ -13,6 +14,7 @@ namespace Cacti
 		void Update(float dt);
 
 		std::vector<Body> bodies;
+		std::vector<Contact> contacts;
 
 		const int MaxBodies = 100;
 
