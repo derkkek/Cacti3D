@@ -10,7 +10,7 @@ namespace Cacti
 
 	void Body::Update(float dt)
 	{
-		Vec3 rotateAxis = angularVelocity.Normalize();
+		Vec3 rotateAxis = angularVelocity.Normalize() * dt;
 		float angle = angularVelocity.GetMagnitude();
 		Quaternion newOrientation = Quaternion(rotateAxis, angle);
 		orientation = newOrientation * orientation;
