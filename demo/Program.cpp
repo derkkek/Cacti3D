@@ -61,7 +61,7 @@ void Program::Update()
 		for (int i = 0; i < engine.world.bodies.size(); i++)
 		{
 			const Cacti::Vec3 p = engine.transformBuffer.positions[i];
-			const Cacti::Quat q = engine.transformBuffer.orientations[i];
+			const Cacti::Quaternion q = engine.transformBuffer.orientations[i];
 
 			convertedSceneData.positions[i] = { p.x, p.y, p.z };
 			convertedSceneData.orientations[i] = { q.x, q.y , q.z, q.w };

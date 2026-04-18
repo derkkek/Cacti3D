@@ -3,18 +3,27 @@
 
 namespace Cacti
 {
-	Body::Body(std::unique_ptr<Shape> shape, Vec3 position)
-		:position(position), orientation(Quat(0,0,0,1)), shape(std::move(shape))
+	Body::Body(std::unique_ptr<Shape> shape, Vec3 position, Vec3 angularVel)
+		:position(position), orientation(Quaternion(0,0,0,1)), angularVelocity(angularVel), shape(std::move(shape))
 	{
+	}
+
+	void Body::Update(float dt)
+	{
+		Vec3 rotateAxis = angularVelocity.Normalize();
+		float angle = angularVelocity.GetMagnitude();
+		Quaternion newOrientation = Quaternion(rotateAxis, angle);
+		orientation = newOrientation * orientation;
+		orientation.Normalize();
 	}
 
 	Vec3 Body::WorldSpaceToLocalSpace(const Vec3 p)
 	{
 		Vec3 localPointTransformPosition = p - position;
 
-		Quat localPointQuat(localPointTransformPosition.x, localPointTransformPosition.y, localPointTransformPosition.z, 0);
+		Quaternion localPointQuat(localPointTransformPosition.x, localPointTransformPosition.y, localPointTransformPosition.z, 0);
 
-		Quat invertedRotation = orientation * localPointQuat * orientation.Inverse();
+		Quaternion invertedRotation = orientation * localPointQuat * orientation.Inverse();
 
 		return Vec3(invertedRotation.x, invertedRotation.y, invertedRotation.z);
 	}

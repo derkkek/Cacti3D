@@ -1,14 +1,14 @@
 #pragma once
 #include <vector>
 #include "Math/Vector.h"
-#include "Math/Quat.h"
+#include "Math/Quaternion.h"
 #include <Contact.h>
 namespace Cacti
 {
 	struct TransformBuffer
 	{
 		std::vector<Vec3> positions;
-		std::vector<Quat> orientations;
+		std::vector<Quaternion> orientations;
 		void Init(int size)
 		{
 			positions.resize(size);

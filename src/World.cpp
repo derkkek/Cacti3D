@@ -14,8 +14,10 @@ namespace Cacti
 	{
 		bodies.reserve(MaxBodies);
 		//bodies.emplace_back(std::make_unique<Sphere>(1), Vec3(0, 3, 0));
-		bodies.emplace_back(std::make_unique<Sphere>(1), Vec3(3, 1, 0));
-		bodies.emplace_back(std::make_unique<Sphere>(1), Vec3(5, 1, 0));
+		bodies.emplace_back(std::make_unique<Sphere>(1), Vec3(3, 1, 0), Vec3(1,1,1));
+		bodies.emplace_back(std::make_unique<Sphere>(1), Vec3(2, 1, 0), Vec3(1,0,0));
+		bodies.emplace_back(std::make_unique<Sphere>(1), Vec3(0, 2, 0), Vec3(0, 1, 0));
+		bodies.emplace_back(std::make_unique<Sphere>(1), Vec3(0, 1, 2), Vec3(0, 0, 1));
 		bodies.emplace_back(std::make_unique<Sphere>(100), Vec3(0, -100, 0));
 
 	}
@@ -39,6 +41,11 @@ namespace Cacti
 				}
 
 			}
+		}
+
+		for (int i = 0; i < bodies.size(); i++)
+		{
+			bodies[i].Update(dt);
 		}
 	}
 }

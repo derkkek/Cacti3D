@@ -297,7 +297,9 @@ void Renderer::Update(ConvertedSceneData& convertedSceneData)
 
 		DrawLine3D(wA, normalEnd, GREEN);
 	}
-
+	DrawLine3D(Vector3Zero(), Vector3UnitX * 5, RED);
+	DrawLine3D(Vector3Zero(), Vector3UnitY * 5, GREEN);
+	DrawLine3D(Vector3Zero(), Vector3UnitZ * 5, BLUE);
 	EndMode3D();
 	DrawFPS(10, 10);
 	EndDrawing();
