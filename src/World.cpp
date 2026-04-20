@@ -13,31 +13,27 @@ namespace Cacti
 	void World::Init()
 	{
 		bodies.reserve(MaxBodies);
-		//bodies.emplace_back(std::make_unique<Sphere>(1), Vec3(0, 3, 0));
-		bodies.emplace_back(std::make_unique<Sphere>(1), Vec3(3, 1, 0), Vec3(1,1,1));
-		bodies.emplace_back(std::make_unique<Sphere>(1), Vec3(2, 1, 0), Vec3(1,0,0));
-		bodies.emplace_back(std::make_unique<Sphere>(1), Vec3(0, 2, 0), Vec3(0, 1, 0));
-		bodies.emplace_back(std::make_unique<Sphere>(1), Vec3(0, 1, 2), Vec3(0, 0, 1));
+		bodies.emplace_back(std::make_unique<Sphere>(1), Vec3(0, 3, 0), Vec3(0,-10,0), Vec3(0, 0, 0), 1);
+
 		bodies.emplace_back(std::make_unique<Sphere>(100), Vec3(0, -100, 0));
 
 	}
 	void World::Update(float dt)
 	{
-		time += dt;
-		//bodies[0].position.y = sinf(time) + 0.5;
-		//bodies[0].position.x = sinf(time * 2);
-		bodies[0].position.y = sinf(time * 2) + 1;
-		bodies[0].position.x = sinf(time) * 2 + 3;
-		contacts.clear();
+		//for (int i = 0; i < bodies.size(); i++)
+		//{
+		//	bodies[i].ApplyImpulse(Vec3(0, -10, 0) * dt);
+		//}
+		Contact contact{};
 
 		for (int i = 0; i < bodies.size(); i++)
 		{
 			for (int j = i + 1; j < bodies.size(); j++)
 			{
-				Contact contact{};
 				if (Intersections::Intersect(bodies[i], bodies[j], contact))
 				{
-					contacts.emplace_back(contact);
+					ResolveContact(contact);
+					//contacts.emplace_back(contact);
 				}
 
 			}

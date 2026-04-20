@@ -224,7 +224,7 @@ namespace Cacti
 		float GetLengthSqr() const { return Dot(*this); }
 		bool IsValid() const;
 		void GetOrtho(Vec3& u, Vec3& v) const;
-
+		Vec3 Normalized() const;
 		const float* ToPtr() const { return &x; }
 
 	public:
@@ -394,6 +394,12 @@ namespace Cacti
 			z *= invMag;
 		}
 		return *this;
+	}
+
+	inline Vec3 Vec3::Normalized() const {
+		Vec3 copy = *this;
+		copy.Normalize();
+		return copy;
 	}
 
 	inline float Vec3::GetMagnitude() const {

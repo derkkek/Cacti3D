@@ -32,6 +32,12 @@ namespace Cacti
 		{
 			contactBuffer.contacts[i] = world.contacts[i];
 		}
+
+		/*This can be removed in future. now Debug purposes.*/
+		if (world.contacts.size() >= contactBuffer.contacts.size())
+		{
+			contactBuffer.contacts.resize(contactBuffer.contacts.size() * 2);
+		}
 	}
 
 	void Engine::Update(float dt)

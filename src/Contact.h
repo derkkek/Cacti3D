@@ -16,4 +16,6 @@ namespace Cacti
 		Body* a;
 		Body* b;
 	};
+
+	void ResolveContact(Contact& c);
 }

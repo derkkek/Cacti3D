@@ -8,16 +8,21 @@ namespace Cacti
 	class Body
 	{
 	public:
-		Body(std::unique_ptr<Shape> shape, Vec3 position, Vec3 angularVel = Vec3(0,0,0));
+		Body(std::unique_ptr<Shape> shape, Vec3 position, Vec3 linearVel = Vec3(0,0,0), Vec3 angularVel = Vec3(0, 0, 0), float invMass = 0.0);
 
 		void Update(float dt);
 		Vec3 position;
+
+		float invMass;
+		Vec3 linearVelocity;
 
 		Vec3 angularVelocity;
 		Quaternion orientation;
 		std::unique_ptr<Shape> shape;
 
 		Vec3 WorldSpaceToLocalSpace(const Vec3 p);
+
+		void ApplyImpulse(const Vec3 J);
 	private:
 	};
 

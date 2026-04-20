@@ -337,6 +337,6 @@ void RenderModel::Draw(const Vector3 pos, const Quaternion& orient)
 	float angleDeg = angle * RAD2DEG;
 	Vector3 raylibAxis = { axis.x, axis.y, axis.z };
 
-	DrawModelWiresEx(this->model, pos, raylibAxis, angleDeg, Vector3One(), this->color);
+	DrawModelEx(this->model, pos, raylibAxis, angleDeg, Vector3One(), this->color);
 }
 
