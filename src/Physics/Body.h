@@ -8,7 +8,7 @@ namespace Cacti
 	class Body
 	{
 	public:
-		Body(std::unique_ptr<Shape> shape, Vec3 position, Vec3 linearVel = Vec3(0,0,0), Vec3 angularVel = Vec3(0, 0, 0), float invMass = 0.0);
+		Body(std::unique_ptr<Shape> shape, Vec3 position, Vec3 linearVel = Vec3(0,0,0), Vec3 angularVel = Vec3(0, 0, 0), float e = 0.5f,float invMass = 0.0);
 
 		void Update(float dt);
 		Vec3 position;
@@ -21,6 +21,8 @@ namespace Cacti
 		std::unique_ptr<Shape> shape;
 
 		Vec3 WorldSpaceToLocalSpace(const Vec3 p);
+
+		float e; // coef. of restitution.
 
 		void ApplyImpulse(const Vec3 J);
 	private:

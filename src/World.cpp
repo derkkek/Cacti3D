@@ -13,17 +13,17 @@ namespace Cacti
 	void World::Init()
 	{
 		bodies.reserve(MaxBodies);
-		bodies.emplace_back(std::make_unique<Sphere>(1), Vec3(0, 3, 0), Vec3(0,-10,0), Vec3(0, 0, 0), 1);
+		bodies.emplace_back(std::make_unique<Sphere>(1), Vec3(0, 5, 0), Vec3(0,0,0), Vec3(0, 0, 0), 1.0f, 1.0f);
 
 		bodies.emplace_back(std::make_unique<Sphere>(100), Vec3(0, -100, 0));
 
 	}
 	void World::Update(float dt)
 	{
-		//for (int i = 0; i < bodies.size(); i++)
-		//{
-		//	bodies[i].ApplyImpulse(Vec3(0, -10, 0) * dt);
-		//}
+		for (int i = 0; i < bodies.size(); i++)
+		{
+			bodies[i].ApplyImpulse(Vec3(0, -10, 0) * dt);
+		}
 		Contact contact{};
 
 		for (int i = 0; i < bodies.size(); i++)

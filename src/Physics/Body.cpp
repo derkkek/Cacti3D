@@ -1,11 +1,10 @@
 #include "Body.h"
 #include "Body.h"
-#include "Body.h"
 
 namespace Cacti
 {
-	Body::Body(std::unique_ptr<Shape> shape, Vec3 position, Vec3 linearVel ,Vec3 angularVel, float invMass)
-		:position(position), orientation(Quaternion(0,0,0,1)), linearVelocity(linearVel), angularVelocity(angularVel), invMass(invMass), shape(std::move(shape))
+	Body::Body(std::unique_ptr<Shape> shape, Vec3 position, Vec3 linearVel ,Vec3 angularVel, float e, float invMass)
+		:position(position), orientation(Quaternion(0,0,0,1)), linearVelocity(linearVel), angularVelocity(angularVel), invMass(invMass), e(e), shape(std::move(shape))
 	{
 	}
 
@@ -41,6 +40,4 @@ namespace Cacti
 
 		linearVelocity += J * invMass;
 	}
-
 }
-

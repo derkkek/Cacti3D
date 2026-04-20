@@ -14,6 +14,13 @@ namespace Cacti
 		a->position += ds * tA;
 		b->position -= ds * tB;
 
-		a->linearVelocity/= 2;
+		float combinedE = a->e * b->e;
+		const Vec3 relV = a->linearVelocity - b->linearVelocity;
+		const float projectedVelOntoCollisionNormal = relV.Dot(c.normal);
+
+		float JMag = (projectedVelOntoCollisionNormal * -(1 + combinedE)) / (a->invMass + b->invMass);
+
+		a->ApplyImpulse(c.normal * JMag);
+		b->ApplyImpulse(c.normal * -JMag);
 	}
 }
