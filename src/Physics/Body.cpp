@@ -1,5 +1,7 @@
 #include "Body.h"
 #include "Body.h"
+#include "Body.h"
+#include "Body.h"
 
 namespace Cacti
 {
@@ -39,5 +41,19 @@ namespace Cacti
 		}
 
 		linearVelocity += J * invMass;
+	}
+	Mat3 Cacti::Body::GetInverseInertiaLocalSpace() const
+	{
+		Mat3 inertiaTensor = shape->GetInertiaTensor();
+		Mat3 invInertia = inertiaTensor.Inverse() * invMass;
+		return invInertia;
+	}
+	Mat3 Cacti::Body::GetInverseInertiaWorldSpace() const
+	{
+		Mat3 inertiaTensor = shape->GetInertiaTensor();
+		Mat3 invInertia = inertiaTensor.Inverse() * invMass;
+		Mat3 orientationWorld = orientation.ToMat3();
+		Mat3 inverseInertiaWorldSpace = orientationWorld * invInertia * orientationWorld.Transpose();
+		return inverseInertiaWorldSpace;
 	}
 }

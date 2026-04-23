@@ -25,6 +25,9 @@ namespace Cacti
 		float e; // coef. of restitution.
 
 		void ApplyImpulse(const Vec3 J);
+
+		Mat3 GetInverseInertiaLocalSpace() const;
+		Mat3 GetInverseInertiaWorldSpace() const;
 	private:
 	};
 

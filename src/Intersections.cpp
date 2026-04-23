@@ -34,8 +34,9 @@ namespace Cacti
 
 				return true;
 			}
-
 		}
+
+		// TODO: either populate world points in here by calling local space to world space func or in resolution. Currently it's being populated only for spheres.
 		return false;
 	}
 }

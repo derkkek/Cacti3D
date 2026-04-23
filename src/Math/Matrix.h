@@ -161,6 +161,7 @@ namespace Cacti
 		return (i - j + k);
 	}
 
+	/*We know that our rotation matrix is orthagonal so that it's transpose equals to it's inverse.*/
 	inline Mat3 Mat3::Transpose() const {
 		Mat3 transpose;
 		for (int i = 0; i < 3; i++) {

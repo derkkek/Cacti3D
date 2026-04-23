@@ -1,4 +1,5 @@
 #pragma once
+#include "Math/Matrix.h"
 
 namespace Cacti
 {
@@ -24,6 +25,8 @@ namespace Cacti
 			return centerOfMass;
 		}
 
+		virtual Mat3 GetInertiaTensor() const = 0;
+
 	protected:
 		Vec3 centerOfMass;
 	};
@@ -46,6 +49,15 @@ namespace Cacti
 		Vec3 GetCenterOfMass() const override
 		{
 			return Vec3(0,0,0);
+		}
+
+		Mat3 GetInertiaTensor() const override
+		{
+			Mat3 tensor{};
+			tensor.rows[0][0] = 2 / 5 * radius * radius;
+			tensor.rows[1][1] = 2 / 5 * radius * radius;
+			tensor.rows[2][2] = 2 / 5 * radius * radius;
+			return tensor;
 		}
 
 		float radius;
