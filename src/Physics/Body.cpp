@@ -1,7 +1,5 @@
 #include "Body.h"
 #include "Body.h"
-#include "Body.h"
-#include "Body.h"
 
 namespace Cacti
 {
@@ -33,7 +31,13 @@ namespace Cacti
 		return Vec3(invertedRotation.x, invertedRotation.y, invertedRotation.z);
 	}
 
-	void Body::ApplyImpulse(const Vec3 J)
+	/*TODO:*/
+	Vec3 Body::CenterOfMassWorldSpace()
+	{
+		return Vec3();
+	}
+
+	void Body::ApplyImpulse(const Vec3 impulsePoint, const Vec3 J)
 	{
 		if (invMass == 0.0)
 		{
@@ -41,19 +45,22 @@ namespace Cacti
 		}
 
 		linearVelocity += J * invMass;
+		const Vec3 r = impulsePoint - CenterOfMassWorldSpace();//Poisiton should be center of mass!!!
+		const Vec3 dL = r.Cross(J);
+		angularVelocity += GetInverseInertiaWorldSpace() * dL;
 	}
-	Mat3 Cacti::Body::GetInverseInertiaLocalSpace() const
+	Mat3 Body::GetInverseInertiaLocalSpace() const
 	{
 		Mat3 inertiaTensor = shape->GetInertiaTensor();
-		Mat3 invInertia = inertiaTensor.Inverse() * invMass;
-		return invInertia;
+		Mat3 invInertiaTensor = inertiaTensor.Inverse() * invMass;
+		return invInertiaTensor;
 	}
-	Mat3 Cacti::Body::GetInverseInertiaWorldSpace() const
+	Mat3 Body::GetInverseInertiaWorldSpace() const
 	{
 		Mat3 inertiaTensor = shape->GetInertiaTensor();
-		Mat3 invInertia = inertiaTensor.Inverse() * invMass;
-		Mat3 orientationWorld = orientation.ToMat3();
-		Mat3 inverseInertiaWorldSpace = orientationWorld * invInertia * orientationWorld.Transpose();
-		return inverseInertiaWorldSpace;
+		Mat3 invInertiaTensor = inertiaTensor.Inverse() * invMass;
+		Mat3 orientationMatrix = orientation.ToMat3();
+		Mat3 invInertiaWorldSpace = orientationMatrix * invInertiaTensor * orientationMatrix.Transpose();
+		return invInertiaWorldSpace;
 	}
 }

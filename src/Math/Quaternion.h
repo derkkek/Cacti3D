@@ -171,11 +171,7 @@ namespace Cacti
 
 	inline Mat3 Quaternion::RotateMatrix(const Mat3& rhs) const
 	{
-		Mat3 mat;
-		mat.rows[0] = RotatePoint(rhs.rows[0]);
-		mat.rows[1] = RotatePoint(rhs.rows[1]);
-		mat.rows[2] = RotatePoint(rhs.rows[2]);
-		return mat;
+
 	}
 
 	inline bool Quaternion::IsValid() const
@@ -197,12 +193,10 @@ namespace Cacti
 
 	inline Mat3 Quaternion::ToMat3() const
 	{
-		Mat3 mat;
-		mat.Identity();
-
-		mat.rows[0] = RotatePoint(mat.rows[0]);
-		mat.rows[1] = RotatePoint(mat.rows[1]);
-		mat.rows[2] = RotatePoint(mat.rows[2]);
+		Mat3 mat{};
+		mat.rows[0] = { (1 - 2 * y * y - 2 * z * z), (2 * x * y + 2 * w * z), (2 * x * z - 2 * w * y) };
+		mat.rows[1] = { (2 * x * y - 2 * w * z), (1 - 2 * x * x - 2 * z * z), (2 * y * z + 2 * w * x) };
+		mat.rows[2] = { (2 * x * z + 2 * w * y), (2 * y * z - 2 * w * x), (1 - 2 * x * x - 2 * y * y) };
 		return mat;
 	}
 

@@ -22,9 +22,11 @@ namespace Cacti
 
 		Vec3 WorldSpaceToLocalSpace(const Vec3 p);
 
+		Vec3 CenterOfMassWorldSpace();
+
 		float e; // coef. of restitution.
 
-		void ApplyImpulse(const Vec3 J);
+		void ApplyImpulse(const Vec3 impulsePoint, const Vec3 J);
 
 		Mat3 GetInverseInertiaLocalSpace() const;
 		Mat3 GetInverseInertiaWorldSpace() const;

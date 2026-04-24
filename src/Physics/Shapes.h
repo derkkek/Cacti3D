@@ -54,9 +54,9 @@ namespace Cacti
 		Mat3 GetInertiaTensor() const override
 		{
 			Mat3 tensor{};
-			tensor.rows[0][0] = 2 / 5 * radius * radius;
-			tensor.rows[1][1] = 2 / 5 * radius * radius;
-			tensor.rows[2][2] = 2 / 5 * radius * radius;
+			tensor.rows[0][0] = 2.0f / 5.0f * radius * radius;
+			tensor.rows[1][1] = 2.0f / 5.0f * radius * radius;
+			tensor.rows[2][2] = 2.0f / 5.0f * radius * radius;
 			return tensor;
 		}
 
