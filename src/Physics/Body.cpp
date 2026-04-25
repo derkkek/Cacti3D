@@ -1,5 +1,4 @@
 #include "Body.h"
-#include "Body.h"
 
 namespace Cacti
 {
@@ -31,10 +30,16 @@ namespace Cacti
 		return Vec3(invertedRotation.x, invertedRotation.y, invertedRotation.z);
 	}
 
-	/*TODO:*/
 	Vec3 Body::CenterOfMassWorldSpace()
 	{
-		return Vec3();
+		Vec3 shapeCom = shape->GetCenterOfMass();
+		
+		Mat3 R = orientation.ToMat3();
+
+		Vec3 rotation = R * shapeCom;
+
+		Vec3 comWorld = position + rotation;
+		return comWorld;
 	}
 
 	void Body::ApplyImpulse(const Vec3 impulsePoint, const Vec3 J)
@@ -45,9 +50,10 @@ namespace Cacti
 		}
 
 		linearVelocity += J * invMass;
-		const Vec3 r = impulsePoint - CenterOfMassWorldSpace();//Poisiton should be center of mass!!!
+		const Vec3 r = impulsePoint - CenterOfMassWorldSpace();
 		const Vec3 dL = r.Cross(J);
-		angularVelocity += GetInverseInertiaWorldSpace() * dL;
+		Mat3 invInertia = GetInverseInertiaWorldSpace();
+		angularVelocity += invInertia * dL;
 	}
 	Mat3 Body::GetInverseInertiaLocalSpace() const
 	{

@@ -116,7 +116,7 @@ namespace Cacti
 		{
 			for (int j = 0; j < 3; j++)
 			{
-				t.rows[i][j] = t.rows[j][i];
+				t.rows[i][j] = rows[j][i];
 			}
 		}
 		return t;
