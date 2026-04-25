@@ -3,6 +3,7 @@
 #include "rlights.h"
 #include "rlgl.h"
 #include "raymath.h"
+#include <iostream>
 #if defined(PLATFORM_DESKTOP)
 #define GLSL_VERSION            330
 #else   // PLATFORM_ANDROID, PLATFORM_WEB
@@ -335,6 +336,8 @@ void RenderModel::Draw(const Vector3 pos, const Quaternion& orient)
 	float angle;
 	QuaternionToAxisAngle(orient, &axis, &angle);
 	float angleDeg = angle * RAD2DEG;
+	//std::cout << "angleDeg: " << angleDeg << " axis: " << axis.x << ", " << axis.y << ", " << axis.z << "\n";
+
 	Vector3 raylibAxis = { axis.x, axis.y, axis.z };
 
 	DrawModelWiresEx(this->model, pos, raylibAxis, angleDeg, Vector3One(), this->color);

@@ -1,4 +1,5 @@
 #include "Body.h"
+#include <iostream>
 
 namespace Cacti
 {
@@ -13,7 +14,7 @@ namespace Cacti
 
 		float angle = angularVelocity.GetMagnitude() * dt;
 
-		Vec3 axis = angularVelocity.Normalized(); // this doesn't normalize velocity compeletly. Returns a copy, so we don't lose actual angular velocity.
+		Vec3 axis = angularVelocity.Normalize(); // this doesn't normalize velocity compeletly. Returns a copy, so we don't lose actual angular velocity.
 		Quaternion deltaRotation(axis, angle);
 		orientation = deltaRotation * orientation; // this order works for world space rotations.
 		orientation.Normalize();
@@ -53,7 +54,12 @@ namespace Cacti
 		const Vec3 r = impulsePoint - CenterOfMassWorldSpace();
 		const Vec3 dL = r.Cross(J);
 		Mat3 invInertia = GetInverseInertiaWorldSpace();
+
+		Vec3 dAngular = invInertia * dL;
+		const Vec3 com = CenterOfMassWorldSpace();
 		angularVelocity += invInertia * dL;
+		std::cout << "angular vel:" << angularVelocity.x << ", " << angularVelocity.y << ", " << angularVelocity.z << "\n";
+
 	}
 	Mat3 Body::GetInverseInertiaLocalSpace() const
 	{

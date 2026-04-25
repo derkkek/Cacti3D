@@ -1,4 +1,5 @@
 #include "Contact.h"
+#include <iostream>
 
 namespace Cacti
 {
@@ -7,12 +8,6 @@ namespace Cacti
 		Body* a = c.a;
 		Body* b = c.b;
 
-		const float tA = a->invMass / (a->invMass + b->invMass);
-		const float tB = b->invMass / (a->invMass + b->invMass);
-
-		const Vec3 ds = c.worldPointB - c.worldPointA;
-		a->position += ds * tA;
-		b->position -= ds * tB;
 
 		float combinedE = a->e * b->e;
 
@@ -34,7 +29,16 @@ namespace Cacti
 		const float JMag = (projectedVelOntoCollisionNormal * -(1 + combinedE)) / ((a->invMass + b->invMass) + angularFactor.Dot(c.normal));
 
 		const Vec3 J = c.normal * JMag;
+
 		a->ApplyImpulse(c.worldPointA, J);
 		b->ApplyImpulse(c.worldPointB, J * -1);
+
+		const float tA = a->invMass / (a->invMass + b->invMass);
+		const float tB = b->invMass / (a->invMass + b->invMass);
+
+		const Vec3 ds = c.worldPointB - c.worldPointA;
+		a->position += ds * tA;
+		b->position -= ds * tB;
+
 	}
 }
