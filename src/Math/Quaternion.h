@@ -32,6 +32,9 @@ namespace Cacti
 		float	MagnitudeSquared() const;
 		float	GetMagnitude() const;
 		Vec3	RotatePoint(const Vec3& rhs) const;
+		Vec3	RotatePointOptimized(const Vec3& rhs) const;
+
+
 		Mat3	RotateMatrix(const Mat3& rhs) const;
 		Vec3	xyz() const { return Vec3(x, y, z); }
 		bool	IsValid() const;
@@ -166,6 +169,15 @@ namespace Cacti
 		Quaternion vector(rhs.x, rhs.y, rhs.z, 0.0f);
 		Quaternion final = *this * vector * Inverse();
 		return Vec3(final.x, final.y, final.z);
+	}
+
+	/*If quaternion is normalized, use this, this doesn't divide.*/
+	inline Vec3 Quaternion::RotatePointOptimized(const Vec3& rhs) const
+	{
+		Quaternion conjugate = Quaternion(-x, -y, -z, w);
+		Quaternion v = Quaternion(rhs.x, rhs.y, rhs.z, 0);
+		Quaternion result = (*this) * v * conjugate;
+		return Vec3(result.x, result.y, result.z);
 	}
 
 	inline bool Quaternion::IsValid() const {
