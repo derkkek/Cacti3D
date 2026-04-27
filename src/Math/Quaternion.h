@@ -1,23 +1,34 @@
+//
+//	Quaternion.h
+//
 #pragma once
 #include "Vector.h"
 #include "Matrix.h"
 
-
+/*
+ ================================
+ Quaternion
+ ================================
+ */
 namespace Cacti
 {
-	class Quaternion
-	{
+	class Quaternion {
 	public:
 		Quaternion();
-		Quaternion(const Quaternion& q1);
+		Quaternion(const Quaternion& rhs);
 		Quaternion(float X, float Y, float Z, float W);
 		Quaternion(Vec3 n, const float angleRadians);
+		const Quaternion& operator = (const Quaternion& rhs);
+
+		Quaternion& operator *= (const float& rhs);
+		Quaternion& operator *= (const Quaternion& rhs);
+		Quaternion	operator * (const Quaternion& rhs) const;
 
 		void ToAxisAngle(Vec3& axis, float& angle) const;
 
 		void	Normalize();
 		void	Invert();
-		Quaternion	Inverse();
+		Quaternion	Inverse() const;
 		float	MagnitudeSquared() const;
 		float	GetMagnitude() const;
 		Vec3	RotatePoint(const Vec3& rhs) const;
@@ -28,50 +39,48 @@ namespace Cacti
 		Mat3	ToMat3() const;
 		Vec4	ToVec4() const { return Vec4(w, x, y, z); }
 
-		const Quaternion& operator = (const Quaternion& rhs);
-
-		Quaternion& operator *= (const float& rhs);
-		Quaternion& operator *= (const Quaternion& rhs);
-		Quaternion	operator * (const Quaternion& rhs) const;
-
-
+	public:
+		float w;
 		float x;
 		float y;
 		float z;
-		float w;
-	
-	private:
-
 	};
 
-	inline Quaternion::Quaternion()
-		:x(0), y(0), z(0), w(1)
-	{
+	inline Quaternion::Quaternion() :
+		x(0),
+		y(0),
+		z(0),
+		w(1) {
 	}
-	inline Quaternion::Quaternion(const Quaternion& q1)
-		: x(q1.x), y(q1.y), z(q1.z), w(q1.w)
-	{
 
+	inline Quaternion::Quaternion(const Quaternion& rhs) :
+		x(rhs.x),
+		y(rhs.y),
+		z(rhs.z),
+		w(rhs.w) {
 	}
-	inline Quaternion::Quaternion(float X, float Y, float Z, float W)
-		: x(X), y(Y), z(Z), w(W)
-	{
+
+	inline Quaternion::Quaternion(float X, float Y, float Z, float W) :
+		x(X),
+		y(Y),
+		z(Z),
+		w(W) {
 	}
+
 	inline Quaternion::Quaternion(Vec3 n, const float angleRadians)
 	{
-		const float radiansDividedByTwo = angleRadians * 0.5f;
+		const float halfAngleRadians = 0.5f * angleRadians;
 
-		w = cosf(radiansDividedByTwo);
+		w = cosf(halfAngleRadians);
 
-		x = sinf(radiansDividedByTwo) * n.x;
-
-		y = sinf(radiansDividedByTwo) * n.y;
-
-		z = sinf(radiansDividedByTwo) * n.z;
+		const float halfSine = sinf(halfAngleRadians);
+		n.Normalize();
+		x = n.x * halfSine;
+		y = n.y * halfSine;
+		z = n.z * halfSine;
 	}
 
-	inline const Quaternion& Quaternion::operator=(const Quaternion& rhs)
-	{
+	inline const Quaternion& Quaternion::operator = (const Quaternion& rhs) {
 		x = rhs.x;
 		y = rhs.y;
 		z = rhs.z;
@@ -79,8 +88,7 @@ namespace Cacti
 		return *this;
 	}
 
-	inline Quaternion& Quaternion::operator*=(const float& rhs)
-	{
+	inline Quaternion& Quaternion::operator *= (const float& rhs) {
 		x *= rhs;
 		y *= rhs;
 		z *= rhs;
@@ -88,8 +96,7 @@ namespace Cacti
 		return *this;
 	}
 
-	inline Quaternion& Quaternion::operator*=(const Quaternion& rhs)
-	{
+	inline Quaternion& Quaternion::operator *= (const Quaternion& rhs) {
 		Quaternion temp = *this * rhs;
 		w = temp.w;
 		x = temp.x;
@@ -98,8 +105,7 @@ namespace Cacti
 		return *this;
 	}
 
-	inline Quaternion Quaternion::operator*(const Quaternion& rhs) const
-	{
+	inline Quaternion Quaternion::operator * (const Quaternion& rhs) const {
 		Quaternion temp;
 		temp.w = (w * rhs.w) - (x * rhs.x) - (y * rhs.y) - (z * rhs.z);
 		temp.x = (x * rhs.w) + (w * rhs.x) + (y * rhs.z) - (z * rhs.y);
@@ -110,72 +116,59 @@ namespace Cacti
 
 	inline void Quaternion::ToAxisAngle(Vec3& axis, float& angle) const
 	{
-		const float temp = angle;
-
-		const float halfAngle = acosf(w);
-		angle = halfAngle * 2.0f;
+		angle = 2.0f * acosf(w);
 
 		float sinHalfAngle = sqrtf(1.0f - w * w);
 
-		if (sinHalfAngle < 0.0001)
+		if (sinHalfAngle < 0.0001f)
 		{
-			axis = Vec3(0, 1, 0);
+			axis = Vec3(0.0f, 1.0f, 0.0f);
 		}
 		else
 		{
-			axis.x = x / sinHalfAngle;
-			axis.y = y / sinHalfAngle;
-			axis.z = z / sinHalfAngle;
+			axis = Vec3(x / sinHalfAngle, y / sinHalfAngle, z / sinHalfAngle);
 		}
 	}
-	inline void Quaternion::Invert()
-	{
-		*this *= (1.0f / MagnitudeSquared());
+
+	inline void Quaternion::Normalize() {
+		float invMag = 1.0f / GetMagnitude();
+
+		if (0.0f * invMag == 0.0f * invMag) {
+			x = x * invMag;
+			y = y * invMag;
+			z = z * invMag;
+			w = w * invMag;
+		}
+	}
+
+	inline void Quaternion::Invert() {
+		*this *= 1.0f / MagnitudeSquared();
 		x = -x;
 		y = -y;
 		z = -z;
 	}
-	inline float Quaternion::MagnitudeSquared() const
-	{
-		return w * w + x * x + y * y + z * z;
-	}
 
-	inline float Quaternion::GetMagnitude() const
-	{
-		return sqrtf(w * w + x * x + y * y + z * z);
-	}
-
-	inline void Quaternion::Normalize()
-	{
-		const float magn = GetMagnitude();
-		w /= magn;
-		x /= magn;
-		y /= magn;
-		z /= magn;
-	}
-
-	inline Quaternion Quaternion::Inverse()
-	{
+	inline Quaternion Quaternion::Inverse() const {
 		Quaternion val(*this);
 		val.Invert();
 		return val;
 	}
 
-	inline Vec3 Quaternion::RotatePoint(const Vec3& rhs) const
-	{
-		Quaternion conjugate = Quaternion(-x, -y, -z, w);
-		Quaternion v = Quaternion(rhs.x, rhs.y, rhs.z, 0);
-		Quaternion result = (*this) * v * conjugate;
-		return Vec3(result.x, result.y, result.z);
+	inline float Quaternion::MagnitudeSquared() const {
+		return ((x * x) + (y * y) + (z * z) + (w * w));
 	}
 
-	inline Mat3 Quaternion::RotateMatrix(const Mat3& rhs) const
-	{
-
+	inline float Quaternion::GetMagnitude() const {
+		return sqrtf(MagnitudeSquared());
 	}
 
-	inline bool Quaternion::IsValid() const
-	{
+	inline Vec3 Quaternion::RotatePoint(const Vec3& rhs) const {
+		Quaternion vector(rhs.x, rhs.y, rhs.z, 0.0f);
+		Quaternion final = *this * vector * Inverse();
+		return Vec3(final.x, final.y, final.z);
+	}
+
+	inline bool Quaternion::IsValid() const {
 		if (x * 0 != x * 0) {
 			return false;
 		}
@@ -191,13 +184,21 @@ namespace Cacti
 		return true;
 	}
 
-	inline Mat3 Quaternion::ToMat3() const
-	{
-		Mat3 mat{};
-		mat.rows[0] = { (1 - 2 * y * y - 2 * z * z), (2 * x * y + 2 * w * z), (2 * x * z - 2 * w * y) };
-		mat.rows[1] = { (2 * x * y - 2 * w * z), (1 - 2 * x * x - 2 * z * z), (2 * y * z + 2 * w * x) };
-		mat.rows[2] = { (2 * x * z + 2 * w * y), (2 * y * z - 2 * w * x), (1 - 2 * x * x - 2 * y * y) };
+	inline Mat3 Quaternion::RotateMatrix(const Mat3& rhs) const {
+		Mat3 mat;
+		mat.rows[0] = RotatePoint(rhs.rows[0]);
+		mat.rows[1] = RotatePoint(rhs.rows[1]);
+		mat.rows[2] = RotatePoint(rhs.rows[2]);
 		return mat;
 	}
 
+	inline Mat3 Quaternion::ToMat3() const {
+		Mat3 mat;
+		mat.Identity();
+
+		mat.rows[0] = RotatePoint(mat.rows[0]);
+		mat.rows[1] = RotatePoint(mat.rows[1]);
+		mat.rows[2] = RotatePoint(mat.rows[2]);
+		return mat;
+	}
 }
