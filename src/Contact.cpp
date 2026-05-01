@@ -28,16 +28,40 @@ namespace Cacti
 
 		const float projectedVelOntoCollisionNormal = relV.Dot(c.normal);
 		
-		const float JMag = (projectedVelOntoCollisionNormal * -(1 + combinedE)) / ((a->invMass + b->invMass) + angularFactor);
+		const float JMag = (projectedVelOntoCollisionNormal * (1 + combinedE)) / ((a->invMass + b->invMass) + angularFactor);
 
 		const Vec3 J = c.normal * JMag;
 
-		a->ApplyImpulse(pA, J);
-		b->ApplyImpulse(pB, J * -1.0f);
+		a->ApplyImpulse(pA, J * -1.0f);
+		b->ApplyImpulse(pB, J);
+
+		//frictional-tangential impulse
+
+		const float frictionA = a->friction;
+		const float frictionB = b->friction;
+		const float friction = frictionA * frictionB;
+
+		const Vec3 collisionVelocityOnNormalDirection = c.normal * c.normal.Dot(relV);
+
+		//substract velocity on normal direction so that we can end up with the only velocity on tangential direction.
+		const Vec3 collisionTangentialVelocity = relV - collisionVelocityOnNormalDirection;
+
+		//think this as like c.normal for friction impulse.
+		const Vec3 normalOfCollisionTangentialVelocity = collisionTangentialVelocity.Normalized();
+
+		const Vec3 inertiaA = (a->GetInverseInertiaWorldSpace() * r1.Cross(normalOfCollisionTangentialVelocity)).Cross(r1);
+		const Vec3 inertiaB = (b->GetInverseInertiaWorldSpace() * r2.Cross(normalOfCollisionTangentialVelocity)).Cross(r2);
+		const float invInertia = (inertiaA + inertiaB).Dot(normalOfCollisionTangentialVelocity);
+
+		const float reducedMass = 1.0f / (a->invMass + b->invMass + invInertia);
+		const Vec3 impulseFriction = collisionTangentialVelocity * reducedMass * friction;
+
+		a->ApplyImpulse(c.worldPointA, impulseFriction * -1.0f);
+		b->ApplyImpulse(c.worldPointB, impulseFriction);
+
 
 		const float tA = a->invMass / (a->invMass + b->invMass);
 		const float tB = b->invMass / (a->invMass + b->invMass);
-
 		const Vec3 ds = pB - pA;
 		a->position += ds * tA;
 		b->position -= ds * tB;

@@ -5,30 +5,56 @@
 
 namespace Cacti
 {
-	Body::Body(std::unique_ptr<Shape> shape, Vec3 position, Vec3 linearVel ,Vec3 angularVel, float e, float invMass)
-		:position(position), orientation(Quaternion(0,0,0,1)), linearVelocity(linearVel), angularVelocity(angularVel), invMass(invMass), e(e), shape(std::move(shape))
+	Body::Body(std::unique_ptr<Shape> shape, Vec3 position, Vec3 linearVel ,Vec3 angularVel, float e, float friction, float invMass)
+		:position(position), orientation(Quaternion(0,0,0,1)), linearVelocity(linearVel), angularVelocity(angularVel), invMass(invMass), e(e), friction(friction), shape(std::move(shape))
 	{
 	}
 
-	void Body::Update(const float dt)
+	//void Body::Update(const float dt)
+	//{
+	//	position += linearVelocity * dt;
+
+	//	Vec3 positionCM = CenterOfMassWorldSpace();
+	//	Vec3 cmToPos = position - positionCM;
+
+	//	Mat3 orientation = this->orientation.ToMat3();
+	//	Mat3 inertiaTensor = orientation * shape->GetInertiaTensor() * orientation.Transpose();
+
+	//	Vec3 alpha = inertiaTensor.Inverse() * (angularVelocity.Cross(inertiaTensor * angularVelocity));
+	//	angularVelocity += alpha * dt;
+
+	//	Vec3 dAngle = angularVelocity * dt;
+	//	Quaternion dq = Quaternion(dAngle, dAngle.GetMagnitude());
+	//	this->orientation = dq * this->orientation;
+	//	this->orientation.Normalize();
+
+	//	position = positionCM + dq.RotatePoint(cmToPos);
+	//}
+
+	void Body::Update(float dt)
 	{
 		position += linearVelocity * dt;
 
 		Vec3 positionCM = CenterOfMassWorldSpace();
 		Vec3 cmToPos = position - positionCM;
 
-		Mat3 orientation = this->orientation.ToMat3();
-		Mat3 inertiaTensor = orientation * shape->GetInertiaTensor() * orientation.Transpose();
-
+		const Mat3 inertiaTensor = shape->GetInertiaTensor();
 		Vec3 alpha = inertiaTensor.Inverse() * (angularVelocity.Cross(inertiaTensor * angularVelocity));
+
 		angularVelocity += alpha * dt;
 
-		Vec3 dAngle = angularVelocity * dt;
-		Quaternion dq = Quaternion(dAngle, dAngle.GetMagnitude());
-		this->orientation = dq * this->orientation;
+		Vec3 angle = angularVelocity * dt;
+		Vec3 axis = angularVelocity.Normalized(); // this doesn't normalize velocity compeletly. Returns a copy, so we don't lose actual angular velocity.
+		Quaternion deltaRotation(axis, angle.GetMagnitude());
+		this->orientation = deltaRotation * orientation; // this order works for world space rotations.
 		this->orientation.Normalize();
 
-		position = positionCM + dq.RotatePoint(cmToPos);
+		//Vec3 dAngle = angularVelocity * dt;
+		//Quaternion dq = Quaternion(dAngle, dAngle.GetMagnitude());
+		//this->orientation = dq * this->orientation;
+		//this->orientation.Normalize();
+		position = positionCM + deltaRotation.RotatePoint(cmToPos);
+
 	}
 
 	Vec3 Body::WorldSpaceToLocalSpace(const Vec3 p)
@@ -66,6 +92,8 @@ namespace Cacti
 		// = > dw = I ^ −1 * (r x J)
 
 		angularVelocity += GetInverseInertiaWorldSpace() * impulse;
+
+		//assert(angularVelocity.z <= 0);
 		const float maxAngularSpeed = 30.0f;
 		if (angularVelocity.GetLengthSqr() > maxAngularSpeed * maxAngularSpeed)
 		{
@@ -87,6 +115,7 @@ namespace Cacti
 		Vec3 position = CenterOfMassWorldSpace(); // applying impulses must produce to rques the center of mass
 		Vec3 r = impulsePoint - position;
 		Vec3 dL = r.Cross(impulse); // this is in world space.
+
 		ApplyImpulseAngular(dL);
 	}
 	void Body::ApplyImpulseLinear(Vec3 impulse)

@@ -77,7 +77,7 @@ namespace Cacti
 		w = cosf(halfAngleRadians);
 
 		const float halfSine = sinf(halfAngleRadians);
-		n.Normalize();
+		//n.Normalize();
 		x = n.x * halfSine;
 		y = n.y * halfSine;
 		z = n.z * halfSine;
