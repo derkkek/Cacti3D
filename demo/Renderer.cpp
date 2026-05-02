@@ -12,7 +12,7 @@
 
 Renderer::Renderer()
 	:cam({
-		.position = Vector3{ 5.0f, 5.0f, 5.0f },
+		.position = Vector3{ 0.0f, 0.0f, 30.0f },
 		.target = Vector3{ 0.0f, 0.0f, 0.0f },
 		.up = Vector3{ 0.0f, 1.0f, 0.0f },
 		.fovy = 45.0f,
@@ -301,6 +301,7 @@ void Renderer::Update(ConvertedSceneData& convertedSceneData)
 	DrawLine3D(Vector3Zero(), Vector3UnitX * 5, RED);
 	DrawLine3D(Vector3Zero(), Vector3UnitY * 5, GREEN);
 	DrawLine3D(Vector3Zero(), Vector3UnitZ * 5, BLUE);
+
 	EndMode3D();
 	DrawFPS(10, 10);
 	EndDrawing();
