@@ -15,6 +15,9 @@ namespace Cacti
 
 		Body* a;
 		Body* b;
+
+		float timeOfImpact;
+		float seperationDistance;
 	};
 
 	void ResolveContact(Contact& c);

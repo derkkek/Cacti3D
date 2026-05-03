@@ -5,56 +5,38 @@
 
 namespace Cacti
 {
-	bool Intersections::Intersect(Body& bodyA, Body& bodyB, Contact& contact)
+	bool Intersections::Intersect(Body& bodyA, Body& bodyB, Contact& contact, const float dt)
 	{
 		if (bodyA.shape.get()->GetType() == SPHERE && bodyB.shape.get()->GetType() == SPHERE)
 		{
 			const Sphere* sphereA = reinterpret_cast<const Sphere*>(bodyA.shape.get());
 			const Sphere* sphereB = reinterpret_cast<const Sphere*>(bodyB.shape.get());
 
-			const Vec3 baVector = bodyA.position - bodyB.position;
+			float t0(0);
+			float t1(0);
 
-			const float baMagSquared = baVector.GetLengthSqr();
-			Vec3 rayO = sphereA->GetCenterOfMass();
-			Vec3 rayD = sphereB - sphereA;
-			Vec3 sphereCenter = sphereB->GetCenterOfMass();
-			float radius = sphereA->radius + sphereB->radius;
-			float t1;
-			float t2;
-			if (RayTraceCollidedWithSphere(rayO, rayD, sphereCenter, radius, t1, t2))
+			const Vec3 vA = bodyA.linearVelocity;
+			const Vec3 vB = bodyB.linearVelocity;
+			if (SphereSphereDynamic(sphereA, sphereB, vA, vB, bodyA.position, bodyB.position, dt, t0, t1, contact.timeOfImpact, contact.worldPointA, contact.worldPointB))
 			{
-				if (t1 < 0 && t2 < 0)
-				{
-					return false;
-				}
-				else if ((t1 < t2) && 0.0f < t1 && t1 < 1.0f)
-				{
-					bodyA.Update(t1);
-					bodyB.Update(t1);
-				}
-				else if ((t2 < t1) && 0.0f < t2 && t2 < 1.0f)
-				{
-					bodyA.Update(t2);
-					bodyB.Update(t2);
-				}
-				if (baMagSquared <= ((radius) * (radius)))
-				{
-					contact.a = &bodyA;
-					contact.b = &bodyB;
-					Vec3 ab = bodyB.position - bodyA.position;
-					contact.normal = ab.Normalize();
+				//save future contact data.
+				bodyA.Update(contact.timeOfImpact);
+				bodyB.Update(contact.timeOfImpact);
 
-					Vec3 worldCollisionPointA = bodyA.position + contact.normal * sphereA->radius;
-					Vec3 worldCollisionPointB = bodyB.position - contact.normal * sphereB->radius;
+				contact.localPointA = bodyA.WorldSpaceToLocalSpace(contact.worldPointA);
+				contact.localPointB = bodyB.WorldSpaceToLocalSpace(contact.worldPointB);
 
-					contact.worldPointA = worldCollisionPointA;
-					contact.worldPointB = worldCollisionPointB;
+				const Vec3 ba = bodyA.position - bodyB.position;
+				contact.normal = ba.Normalized();
+				
+				//revert to original pos.
+				bodyA.Update(-contact.timeOfImpact);
+				bodyB.Update(-contact.timeOfImpact);
 
-					contact.localPointA = bodyA.WorldSpaceToLocalSpace(worldCollisionPointA);
-					contact.localPointB = bodyB.WorldSpaceToLocalSpace(worldCollisionPointB);
-
-					return true;
-				}
+				const Vec3 ab = bodyB.position - bodyA.position;
+				float r = ab.GetMagnitude() - (sphereA->radius + sphereB->radius);
+				contact.seperationDistance = r;
+				return true;
 			}
 		
 		}
@@ -81,7 +63,7 @@ namespace Cacti
 		return true;
 	}
 
-	bool Intersections::SphereSphereDynamic(Sphere* sphereA, Sphere* sphereB, const Vec3& vA, const Vec3& vB, const Vec3& aPos, const Vec3& bPos, const float dt, float t0, float t1, float toi, Vec3 collisionPointOnA, Vec3 collisionPointOnB)
+	bool Intersections::SphereSphereDynamic(const Sphere* sphereA, const Sphere* sphereB, const Vec3& vA, const Vec3& vB, const Vec3& aPos, const Vec3& bPos, const float dt, float& t0, float& t1, float& toi, Vec3& collisionPointOnA, Vec3& collisionPointOnB)
 	{
 		const Vec3 relV = vA - vB; // let's say B is static.
 		const Vec3 rayOrigin = aPos;

@@ -31,7 +31,7 @@ namespace Cacti
 			{
 				Contact contact{};
 
-				if (Intersections::Intersect(bodies[i], bodies[j], contact))
+				if (Intersections::Intersect(bodies[i], bodies[j], contact, dt))
 				{
 					ResolveContact(contact);
 					//contacts.emplace_back(contact);
