@@ -38,6 +38,7 @@ void Program::InitScene()
 
 	convertedSceneData.positions.resize(engine.transformBuffer.positions.size());
 	convertedSceneData.orientations.resize(engine.transformBuffer.orientations.size());
+	convertedSceneData.contacts.resize(engine.contactBuffer.contacts.size());
 
 	for (int i = 0; i < engine.world.bodies.size(); i++) 
 	{
@@ -56,7 +57,7 @@ void Program::Update()
 	{
 		float dt = GetFrameTime();
 		engine.Update(dt);
-		convertedSceneData.contacts.resize(engine.world.contacts.size());
+		//convertedSceneData.contacts.resize(engine.world.contacts.size());
 
 		for (int i = 0; i < engine.world.bodies.size(); i++)
 		{
@@ -68,7 +69,7 @@ void Program::Update()
 
 		}
 
-		for (int i = 0; i < engine.world.contacts.size(); i++)
+		for (int i = 0; i < engine.contactBuffer.contacts.size(); i++)
 		{
 			const Cacti::Vec3 lpA = engine.contactBuffer.contacts[i].localPointA;
 			const Cacti::Vec3 lpB = engine.contactBuffer.contacts[i].localPointB;

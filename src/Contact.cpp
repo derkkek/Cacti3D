@@ -1,5 +1,6 @@
 #include "Contact.h"
 #include <iostream>
+#include <algorithm>
 
 namespace Cacti
 {
@@ -65,5 +66,23 @@ namespace Cacti
 		const Vec3 ds = pB - pA;
 		a->position += ds * tA;
 		b->position -= ds * tB;
+	}
+	int CompareContacts(const Contact& c0, const Contact& c1)
+	{
+		if (c0.timeOfImpact < c1.timeOfImpact)
+		{
+			return -1;
+		}
+		else if (c0.timeOfImpact == c1.timeOfImpact)
+		{
+			return 0;
+		}
+
+		return 1;
+	}
+	void SortContactsByTheirTimeOfImpact(std::vector<Contact>& contacts)
+	{
+		std::sort(contacts.begin(), contacts.begin() + contacts.size(),
+			[](const Contact& a, const Contact& b) { return CompareContacts(a, b) < 0; });
 	}
 }

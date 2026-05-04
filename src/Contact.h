@@ -1,4 +1,5 @@
 #pragma once
+#include <vector>
 #include "Math/Vector.h"
 #include "Physics/Body.h"
 
@@ -21,4 +22,6 @@ namespace Cacti
 	};
 
 	void ResolveContact(Contact& c);
+	int CompareContacts(const Contact& c0, const Contact& c1);
+	void SortContactsByTheirTimeOfImpact(std::vector<Contact>& contacts);
 }

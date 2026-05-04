@@ -19,9 +19,9 @@ namespace Cacti
 	struct ContactBuffer
 	{
 		std::vector<Contact> contacts;
-		void Init()
+		void Init(int size)
 		{
-			contacts.resize(100);
+			contacts.resize(size);
 		}
 	};
 }

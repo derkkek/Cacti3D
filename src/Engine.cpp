@@ -14,7 +14,7 @@ namespace Cacti
 	{
 		world.Init();
 		transformBuffer.Init(world.MaxBodies);
-		contactBuffer.Init();
+		contactBuffer.Init(world.MaxBodies * world.MaxBodies);
 	}
 
 	void Cacti::Engine::UpdateTransformBuffer()
@@ -34,10 +34,10 @@ namespace Cacti
 		}
 
 		/*This can be removed in future. now Debug purposes.*/
-		if (world.contacts.size() >= contactBuffer.contacts.size())
-		{
-			contactBuffer.contacts.resize(contactBuffer.contacts.size() * 2);
-		}
+		//if (world.contacts.size() >= contactBuffer.contacts.size())
+		//{
+		//	contactBuffer.contacts.resize(contactBuffer.contacts.size() * 2);
+		//}
 	}
 
 	void Engine::Update(float dt)

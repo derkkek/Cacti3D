@@ -16,7 +16,7 @@ namespace Cacti
 		std::vector<Body> bodies;
 		std::vector<Contact> contacts;
 
-		const int MaxBodies = 100;
+		const int MaxBodies = 10;
 
 		float time = 0;
 	private:

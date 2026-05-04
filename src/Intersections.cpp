@@ -33,6 +33,8 @@ namespace Cacti
 				bodyA.Update(-contact.timeOfImpact);
 				bodyB.Update(-contact.timeOfImpact);
 
+				contact.a = &bodyA;
+				contact.b = &bodyB;
 				const Vec3 ab = bodyB.position - bodyA.position;
 				float r = ab.GetMagnitude() - (sphereA->radius + sphereB->radius);
 				contact.seperationDistance = r;
@@ -113,7 +115,7 @@ namespace Cacti
 		const Vec3 newPositionA = aPos + vA * toi;
 		const Vec3 newPositionB = bPos + vB * toi;
 
-		const Vec3 collisionNormal = (newPositionA - newPositionB).Normalize();
+		const Vec3 collisionNormal = (newPositionB - newPositionA).Normalize();
 
 		collisionPointOnA = newPositionA + collisionNormal * sphereA->radius;
 		collisionPointOnB = newPositionB - collisionNormal * sphereB->radius;
