@@ -28,7 +28,7 @@ namespace Cacti
 			bodies[i].ApplyImpulse(bodies[i].position, Vec3(0, -10, 0) * dt);
 		}
 
-		int numContacts = 0;
+		numContacts = 0;
 
 		for (int i = 0; i < bodies.size(); i++)
 		{
@@ -43,7 +43,6 @@ namespace Cacti
 
 				if (Intersections::Intersect(bodies[i], bodies[j], contact, dt))
 				{
-					ResolveContact(contact);
 					contacts[numContacts] = contact;
 					numContacts++;
 				}

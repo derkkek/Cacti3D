@@ -28,7 +28,8 @@ namespace Cacti
 
 	void Engine::UpdateContactBuffer()
 	{
-		for (int i = 0; i < world.contacts.size(); i++)
+		contactBuffer.contacts.resize(world.numContacts);
+		for (int i = 0; i < world.numContacts; i++)
 		{
 			contactBuffer.contacts[i] = world.contacts[i];
 		}
