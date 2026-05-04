@@ -61,11 +61,15 @@ namespace Cacti
 		b->ApplyImpulse(c.worldPointB, impulseFriction);
 
 
-		const float tA = a->invMass / (a->invMass + b->invMass);
-		const float tB = b->invMass / (a->invMass + b->invMass);
-		const Vec3 ds = pB - pA;
-		a->position += ds * tA;
-		b->position -= ds * tB;
+		if (c.timeOfImpact == 0.0f)
+		{
+			const float tA = a->invMass / (a->invMass + b->invMass);
+			const float tB = b->invMass / (a->invMass + b->invMass);
+			const Vec3 ds = pB - pA;
+			a->position += ds * tA;
+			b->position -= ds * tB;
+		}
+
 	}
 	int CompareContacts(const Contact& c0, const Contact& c1)
 	{

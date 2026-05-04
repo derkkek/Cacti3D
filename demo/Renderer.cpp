@@ -12,7 +12,7 @@
 
 Renderer::Renderer()
 	:cam({
-		.position = Vector3{ 0.0f, 0.0f, 30.0f },
+		.position = Vector3{ 0.0f, 5.0f, 10.0f },
 		.target = Vector3{ 0.0f, 0.0f, 0.0f },
 		.up = Vector3{ 0.0f, 1.0f, 0.0f },
 		.fovy = 45.0f,
@@ -277,27 +277,27 @@ void Renderer::Update(ConvertedSceneData& convertedSceneData)
 	rlEnableBackfaceCulling();
 	rlEnableDepthMask();
 
-	for (int i = 0; i < convertedSceneData.contacts.size(); i++)
-	{
-		Vector3 wA = convertedSceneData.contacts[i].worldPointA;
-		Vector3 wB = convertedSceneData.contacts[i].worldPointB;
-		Vector3 lpA = convertedSceneData.contacts[i].localPointA;
-		Vector3 lpB = convertedSceneData.contacts[i].localPointB;
-		
-		Vector3 n = { convertedSceneData.contacts[i].normal.x, convertedSceneData.contacts[i].normal.y, convertedSceneData.contacts[i].normal.z };
+	//for (int i = 0; i < convertedSceneData.contacts.size(); i++)
+	//{
+	//	Vector3 wA = convertedSceneData.contacts[i].worldPointA;
+	//	Vector3 wB = convertedSceneData.contacts[i].worldPointB;
+	//	Vector3 lpA = convertedSceneData.contacts[i].localPointA;
+	//	Vector3 lpB = convertedSceneData.contacts[i].localPointB;
+	//	
+	//	Vector3 n = { convertedSceneData.contacts[i].normal.x, convertedSceneData.contacts[i].normal.y, convertedSceneData.contacts[i].normal.z };
 
 
-		Vector3 normalEnd = {
-			wA.x + n.x,
-			wA.y + n.y,
-			wA.z + n.z
-		};
+	//	Vector3 normalEnd = {
+	//		wA.x + n.x,
+	//		wA.y + n.y,
+	//		wA.z + n.z
+	//	};
 
-		DrawSphere(wA, 0.1f, RED);
-		DrawSphere(wB, 0.1f, RED);
+	//	DrawSphere(wA, 0.1f, RED);
+	//	DrawSphere(wB, 0.1f, RED);
 
-		DrawLine3D(wA, normalEnd, GREEN);
-	}
+	//	DrawLine3D(wA, normalEnd, GREEN);
+	//}
 	DrawLine3D(Vector3Zero(), Vector3UnitX * 5, RED);
 	DrawLine3D(Vector3Zero(), Vector3UnitY * 5, GREEN);
 	DrawLine3D(Vector3Zero(), Vector3UnitZ * 5, BLUE);
