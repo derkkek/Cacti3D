@@ -12,7 +12,7 @@
 
 Renderer::Renderer()
 	:cam({
-		.position = Vector3{ 0.0f, 5.0f, 10.0f },
+		.position = Vector3{ 0.0f, 5.0f, 30.0f },
 		.target = Vector3{ 0.0f, 0.0f, 0.0f },
 		.up = Vector3{ 0.0f, 1.0f, 0.0f },
 		.fovy = 45.0f,
@@ -341,6 +341,6 @@ void RenderModel::Draw(const Vector3 pos, const Quaternion& orient)
 
 	Vector3 raylibAxis = { axis.x, axis.y, axis.z };
 
-	DrawModelWiresEx(this->model, pos, raylibAxis, angleDeg, Vector3One(), this->color);
+	DrawModelEx(this->model, pos, raylibAxis, angleDeg, Vector3One(), this->color);
 }
 

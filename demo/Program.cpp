@@ -111,7 +111,7 @@ RenderModel Program::BuildRenderModelFromPhysicsGeometry(Cacti::Body& body, Cact
 	if (shape->GetType() == Cacti::ShapeType::SPHERE)
 	{
 		Cacti::Sphere* sphereShape = (Cacti::Sphere*)shape;
-		Model sphere = LoadModelFromMesh(GenMeshSphere(sphereShape->radius, 50, 50));
+		Model sphere = LoadModelFromMesh(GenMeshSphere(sphereShape->radius, 130, 130));
 		Vector3 raylibPos = { body.position.x, body.position.y, body.position.z };
 		Color randomColor = colorList[dist(gen)];
 		RenderModel sphereObj{ sphere, randomColor};

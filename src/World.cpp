@@ -15,10 +15,11 @@ namespace Cacti
 	{
 		bodies.reserve(MaxBodies);
 		contacts.resize(MaxBodies * MaxBodies);
-		bodies.emplace_back(std::make_unique<Sphere>(1), Vec3(0, 5, 0), Vec3(0,0,0), Vec3(0, 0, 0), 1.0f, 0.5f, 1.0f);
+		bodies.emplace_back(std::make_unique<Sphere>(1), Vec3(-20, 3, 0), Vec3(10,0,0), Vec3(0, 0, 0), 1.0f, 0.5f, 1.0f);
+		bodies.emplace_back(std::make_unique<Sphere>(1), Vec3(20, 3, 0), Vec3(-10, 0, 0), Vec3(0, 0, 0), 1.0f, 0.5f, 1.0f);
 
 
-		bodies.emplace_back(std::make_unique<Sphere>(100), Vec3(0, -100, 0));
+		bodies.emplace_back(std::make_unique<Sphere>(1000), Vec3(0, -1000, 0));
 
 	}
 	void World::Update(float dt)
@@ -61,6 +62,12 @@ namespace Cacti
 			Contact& contact = contacts[i];
 
 			float passedTimeToCollision = contact.timeOfImpact - accumulatedTime;
+
+
+			if (contact.a->invMass == 0 && contact.b->invMass == 0)
+			{
+				continue;
+			}
 
 			for (int j = 0; j < bodies.size(); j++) 
 			{
