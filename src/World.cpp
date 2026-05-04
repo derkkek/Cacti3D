@@ -14,9 +14,9 @@ namespace Cacti
 	void World::Init()
 	{
 		bodies.reserve(MaxBodies);
-		contacts.resize(MaxBodies * MaxBodies);
-		bodies.emplace_back(std::make_unique<Sphere>(1), Vec3(-20, 3, 0), Vec3(10,0,0), Vec3(0, 0, 0), 1.0f, 0.5f, 1.0f);
-		bodies.emplace_back(std::make_unique<Sphere>(1), Vec3(20, 3, 0), Vec3(-10, 0, 0), Vec3(0, 0, 0), 1.0f, 0.5f, 1.0f);
+		contacts.resize(MaxBodies * MaxBodies, Contact{});
+		bodies.emplace_back(std::make_unique<Sphere>(1), Vec3(-50, 3, 0), Vec3(500,0,0), Vec3(0, 0, 0), 1.0f, 0.5f, 1.0f);
+		bodies.emplace_back(std::make_unique<Sphere>(1), Vec3(50, 3, 0), Vec3(0, 0, 0), Vec3(0, 0, 0), 1.0f, 0.5f, 1.0f);
 
 
 		bodies.emplace_back(std::make_unique<Sphere>(1000), Vec3(0, -1000, 0));
@@ -53,7 +53,7 @@ namespace Cacti
 
 		if (numContacts > 1)
 		{
-			SortContactsByTheirTimeOfImpact(contacts);
+			SortContactsByTheirTimeOfImpact(contacts, numContacts);
 		}
 		
 		float accumulatedTime = 0.0f;

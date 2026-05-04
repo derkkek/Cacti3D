@@ -84,9 +84,9 @@ namespace Cacti
 
 		return 1;
 	}
-	void SortContactsByTheirTimeOfImpact(std::vector<Contact>& contacts)
+	void SortContactsByTheirTimeOfImpact(std::vector<Contact>& contacts, int count)
 	{
-		std::sort(contacts.begin(), contacts.begin() + contacts.size(),
+		std::sort(contacts.begin(), contacts.begin() + count,
 			[](const Contact& a, const Contact& b) { return CompareContacts(a, b) < 0; });
 	}
 }

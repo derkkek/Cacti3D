@@ -23,5 +23,5 @@ namespace Cacti
 
 	void ResolveContact(Contact& c);
 	int CompareContacts(const Contact& c0, const Contact& c1);
-	void SortContactsByTheirTimeOfImpact(std::vector<Contact>& contacts);
+	void SortContactsByTheirTimeOfImpact(std::vector<Contact>& contacts, int count);
 }
