@@ -37,7 +37,7 @@ namespace Cacti
 		}
 
 
-		bodies.emplace_back(std::make_unique<Sphere>(1000), Vec3(0, -1000, 0));
+		bodies.emplace_back(std::make_unique<Sphere>(200), Vec3(0, -200, 0));
 
 	}
 	void World::Update(float dt)

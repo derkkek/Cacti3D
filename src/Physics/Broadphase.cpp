@@ -55,6 +55,7 @@ namespace Cacti
 
 	void Broadphase::CreateCollisionPairs(std::vector<Body>& bodies)
 	{
+		collisionPairs.clear();
 		for (int i = 0; i < projectedAABBS.size() - 1; i++)
 		{
 			for (int j = i + 1; j < projectedAABBS.size(); j++)

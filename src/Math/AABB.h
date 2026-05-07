@@ -29,7 +29,7 @@ namespace Cacti
 		inline float WidthY() const { return max.y - min.y; }
 		inline float WidthZ() const { return max.z - min.z; }
 
-		inline Vec3 GetCenter() { return Vec3((min.x + max.x) + 2, (min.y + max.y) + 2, (min.z + max.z) + 2); }
+		inline Vec3 GetCenter() { return Vec3((min.x + max.x) / 2, (min.y + max.y) / 2, (min.z + max.z) / 2); }
 	private:
 
 	};
