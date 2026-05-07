@@ -48,21 +48,25 @@ namespace Cacti
 	}
 	bool Intersections::RayTraceCollidedWithSphere(const Vec3& rayOrigin, const Vec3& rayDir, const Vec3& sphereCenter, float& sphereRadius, float& t1, float& t2)
 	{
-		float a = rayDir.Dot(rayDir);
-		float b = 2 * rayDir.Dot(rayOrigin - sphereCenter);
-		float c = (rayOrigin - sphereCenter).Dot(rayOrigin - sphereCenter) - sphereRadius * sphereRadius;
+		const Vec3 m = sphereCenter - rayOrigin;
+		const float a = rayDir.Dot(rayDir);
+		const float b = m.Dot(rayDir);
+		const float c = m.Dot(m) - sphereRadius * sphereRadius;
 
-		float discriminant = b * b - 4 * a * c;
+		const float delta = b * b - a * c;
+		const float invA = 1.0f / a;
 
-		if (discriminant < 0)
-		{
+		if (delta < 0) {
+			// no real solutions exist
 			return false;
 		}
 
-		t1 = (-b - sqrtf(discriminant)) / (2 * a);
-		t2 = (-b + sqrtf(discriminant)) / (2 * a);
+		const float deltaRoot = sqrtf(delta);
+		t1 = invA * (b - deltaRoot);
+		t2 = invA * (b + deltaRoot);
 
 		return true;
+	
 	}
 
 	bool Intersections::SphereSphereDynamic(const Sphere* sphereA, const Sphere* sphereB, const Vec3& vA, const Vec3& vB, const Vec3& aPos, const Vec3& bPos, const float dt, float& t0, float& t1, float& toi, Vec3& collisionPointOnA, Vec3& collisionPointOnB)

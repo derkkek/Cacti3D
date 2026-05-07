@@ -18,7 +18,7 @@ namespace Cacti
 
 		int numContacts = 0;
 
-		const int MaxBodies = 100;
+		const int MaxBodies = 500;
 
 		float time = 0;
 	private:

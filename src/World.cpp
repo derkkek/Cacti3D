@@ -15,8 +15,25 @@ namespace Cacti
 	{
 		bodies.reserve(MaxBodies);
 		contacts.resize(MaxBodies * MaxBodies, Contact{});
-		bodies.emplace_back(std::make_unique<Sphere>(1), Vec3(-50, 3, 0), Vec3(500,0,0), Vec3(0, 0, 0), 1.0f, 0.5f, 1.0f);
-		bodies.emplace_back(std::make_unique<Sphere>(1), Vec3(50, 3, 0), Vec3(0, 0, 0), Vec3(0, 0, 0), 1.0f, 0.5f, 1.0f);
+	/*	bodies.emplace_back(std::make_unique<Sphere>(1), Vec3(-100, 3, 0), Vec3(500,0,0), Vec3(0, 0, 0), 1.0f, 0.5f, 1.0f);
+		bodies.emplace_back(std::make_unique<Sphere>(1), Vec3(100, 3, 0), Vec3(0, 0, 0), Vec3(0, 0, 0), 1.0f, 0.5f, 1.0f);*/
+		for(int x = 0; x < 5; x++) 
+		{
+			for(int z = 0; z < 5; z++) 
+			{
+				for (int y = 0; y < 5; y++)
+				{
+					float radius = 0.5f;
+					float xx = float(x - 1) * radius * 3.0f;
+					float zz = float(z - 1) * radius * 3.0f;
+					float yy = float(y - 1) * radius * 6.0f;
+					bodies.emplace_back(std::make_unique<Sphere>(radius), Vec3(xx, yy, zz), Vec3(0, 0, 0), Vec3(0, 0, 0), 1.0f, 0.5f, 1.0f);
+
+				}
+
+			
+			}
+		}
 
 
 		bodies.emplace_back(std::make_unique<Sphere>(1000), Vec3(0, -1000, 0));
