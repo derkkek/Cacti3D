@@ -3,6 +3,7 @@
 #include <iostream>
 #include <Contact.h>
 #include <algorithm>
+#include "Physics/Broadphase.h"
 namespace Cacti
 {
 	World::World()
@@ -48,23 +49,21 @@ namespace Cacti
 
 		numContacts = 0;
 
-		for (int i = 0; i < bodies.size(); i++)
+		std::vector<Broadphase::CollisionPair> collisionPairs = Broadphase::SweepAndPrune(bodies);
+
+		for (int i = 0; i < collisionPairs.size(); i++)
 		{
-			for (int j = i + 1; j < bodies.size(); j++)
+			Contact contact{};
+			Broadphase::CollisionPair pair = collisionPairs[i];
+
+			if (pair.a->invMass == 0 && pair.b->invMass == 0)
 			{
-				Contact contact{};
-
-				if (bodies[i].invMass == 0 && bodies[j].invMass == 0)
-				{
-					continue;
-				}
-
-				if (Intersections::Intersect(bodies[i], bodies[j], contact, dt))
-				{
-					contacts[numContacts] = contact;
-					numContacts++;
-				}
-
+				continue;
+			}
+			if (Intersections::Intersect(*pair.a, *pair.b, contact, dt))
+			{
+				contacts[numContacts] = contact;
+				numContacts++;
 			}
 		}
 
