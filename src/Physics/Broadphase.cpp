@@ -2,14 +2,15 @@
 #include <algorithm>
 namespace Cacti
 {
-	Vec3 Broadphase::projectionAxis;
+	Vec3 Broadphase::projectionAxis = Vec3(1,1,1).Normalized();
 	std::vector<Broadphase::Projection1D> Broadphase::projectedAABBS;
 	std::vector<Broadphase::CollisionPair> Broadphase::collisionPairs;
+
 	
 	Broadphase::Broadphase()
 	{
 		projectionAxis = Vec3(1, 1, 1);
-		projectionAxis.Normalize();
+		//projectionAxis.Normalize();
 	}
 	std::vector<Broadphase::CollisionPair>& Broadphase::SweepAndPrune(std::vector<Body>& bodies)
 	{
@@ -62,7 +63,7 @@ namespace Cacti
 			{
 				if (projectedAABBS[j].left > projectedAABBS[i].right)
 				{
-					break;
+					continue;
 				}
 				collisionPairs.push_back({
 					&bodies[projectedAABBS[i].bodyIndex],

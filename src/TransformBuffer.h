@@ -2,6 +2,7 @@
 #include <vector>
 #include "Math/Vector.h"
 #include "Math/Quaternion.h"
+#include "Math/AABB.h"
 #include <Contact.h>
 namespace Cacti
 {
@@ -22,6 +23,15 @@ namespace Cacti
 		void Init(int size)
 		{
 			contacts.resize(size);
+		}
+	};
+
+	struct AABBBuffer
+	{
+		std::vector<AABB> aabbs;
+		void Init(int size)
+		{
+			aabbs.resize(size);
 		}
 	};
 }

@@ -39,6 +39,7 @@ void Program::InitScene()
 	convertedSceneData.positions.resize(engine.transformBuffer.positions.size());
 	convertedSceneData.orientations.resize(engine.transformBuffer.orientations.size());
 	convertedSceneData.contacts.resize(engine.world.MaxBodies * 2);
+	convertedSceneData.bbs.resize(engine.world.MaxBodies);
 
 	for (int i = 0; i < engine.world.bodies.size(); i++) 
 	{
@@ -65,28 +66,14 @@ void Program::Update()
 		{
 			const Cacti::Vec3 p = engine.transformBuffer.positions[i];
 			const Cacti::Quaternion q = engine.transformBuffer.orientations[i];
+			const Cacti::AABB aabb = engine.aabbBuffer.aabbs[i];
 
 			convertedSceneData.positions[i] = { p.x, p.y, p.z };
 			convertedSceneData.orientations[i] = { q.x, q.y , q.z, q.w };
+			convertedSceneData.bbs[i] = {Vector3(aabb.min.x, aabb.min.y, aabb.min.z), Vector3(aabb.max.x, aabb.max.y, aabb.max.z) };
 
 		}
 
-		//for (int i = 0; i < engine.world.numContacts; i++)
-		//{
-		//	const Cacti::Vec3 lpA = engine.contactBuffer.contacts[i].localPointA;
-		//	const Cacti::Vec3 lpB = engine.contactBuffer.contacts[i].localPointB;
-
-		//	const Cacti::Vec3 wpA = engine.contactBuffer.contacts[i].worldPointA;
-		//	const Cacti::Vec3 wpB = engine.contactBuffer.contacts[i].worldPointB;
-
-		//	const Cacti::Vec3 n = engine.contactBuffer.contacts[i].normal;
-
-		//	convertedSceneData.contacts[i].localPointA = {lpA.x, lpA.y, lpA.z};
-		//	convertedSceneData.contacts[i].localPointB = { lpB.x, lpB.y, lpB.z };
-		//	convertedSceneData.contacts[i].worldPointA = { wpA.x, wpA.y, wpA.z };
-		//	convertedSceneData.contacts[i].worldPointB = { wpB.x, wpB.y, wpB.z };
-		//	convertedSceneData.contacts[i].normal = { n.x, n.y, n.z };
-		//}
 
 		renderer.Update(convertedSceneData);
 	}

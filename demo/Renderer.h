@@ -25,6 +25,7 @@ struct ConvertedSceneData
 	std::vector<Vector3> positions;
 	std::vector<Quaternion> orientations;
 	std::vector<ContactData> contacts;
+	std::vector<BoundingBox> bbs;
 };
 
 

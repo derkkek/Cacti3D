@@ -285,7 +285,11 @@ void Renderer::Update(ConvertedSceneData& convertedSceneData)
 	//	Vector3 lpB = convertedSceneData.contacts[i].localPointB;
 	//	
 	//	Vector3 n = { convertedSceneData.contacts[i].normal.x, convertedSceneData.contacts[i].normal.y, convertedSceneData.contacts[i].normal.z };
-
+	for (int i = 0; i < convertedSceneData.bbs.size(); i++)
+	{
+		const BoundingBox& bb = convertedSceneData.bbs[i];
+		DrawBoundingBox(bb, RED);
+	}
 
 	//	Vector3 normalEnd = {
 	//		wA.x + n.x,

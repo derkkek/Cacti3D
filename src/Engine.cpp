@@ -1,4 +1,5 @@
 #include "Engine.h"
+#include "Engine.h"
 
 namespace Cacti
 {
@@ -15,6 +16,7 @@ namespace Cacti
 		world.Init();
 		transformBuffer.Init(world.MaxBodies);
 		contactBuffer.Init(world.MaxBodies * world.MaxBodies);
+		aabbBuffer.Init(world.MaxBodies);
 	}
 
 	void Cacti::Engine::UpdateTransformBuffer()
@@ -41,10 +43,19 @@ namespace Cacti
 		//}
 	}
 
+	void Engine::UpdateAABBBuffer()
+	{
+		for (int i = 0; i < world.bodies.size(); i++)
+		{
+			aabbBuffer.aabbs[i] = world.bodies[i].shape->GetAABBWorldSpace(world.bodies[i].position, world.bodies[i].orientation);
+		}
+	}
+
 	void Engine::Update(float dt)
 	{
 		world.Update(dt);
 		UpdateTransformBuffer();
 		UpdateContactBuffer();
+		UpdateAABBBuffer();
 	}
 }

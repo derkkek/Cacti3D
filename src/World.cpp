@@ -22,15 +22,10 @@ namespace Cacti
 		{
 			for(int z = 0; z < 5; z++) 
 			{
-				for (int y = 0; y < 5; y++)
-				{
-					float radius = 0.5f;
-					float xx = float(x - 1) * radius * 3.0f;
-					float zz = float(z - 1) * radius * 3.0f;
-					float yy = float(y - 1) * radius * 6.0f;
-					bodies.emplace_back(std::make_unique<Sphere>(radius), Vec3(xx, yy, zz), Vec3(0, 0, 0), Vec3(0, 0, 0), 1.0f, 0.5f, 1.0f);
-
-				}
+				float radius = 0.5f;
+				float xx = float(x - 1) * radius * 1.5f;
+				float zz = float(z - 1) * radius * 1.5f;
+				bodies.emplace_back(std::make_unique<Sphere>(radius), Vec3(xx, 10, zz), Vec3(0, 0, 0), Vec3(0, 0, 0), 1.0f, 0.5f, 1.0f);
 
 			
 			}
@@ -66,6 +61,9 @@ namespace Cacti
 				numContacts++;
 			}
 		}
+
+		std::cout << collisionPairs.size() << "\n";
+
 
 		if (numContacts > 1)
 		{
