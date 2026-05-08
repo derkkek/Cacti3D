@@ -2,27 +2,22 @@
 #include <algorithm>
 namespace Cacti
 {
-	Vec3 Broadphase::projectionAxis = Vec3(1,1,1).Normalized();
-	std::vector<Broadphase::Projection1D> Broadphase::projectedAABBS;
-	std::vector<Broadphase::CollisionPair> Broadphase::collisionPairs;
-
-	
-	Broadphase::Broadphase()
+	Broadphase::Broadphase(int bodiesSize)
+		:projectionAxis(Vec3(1,1,1).Normalized())
 	{
-		projectionAxis = Vec3(1, 1, 1);
-		//projectionAxis.Normalize();
+		projectedAABBS.reserve(bodiesSize);
+		collisionPairs.reserve(bodiesSize * 4);
 	}
 	std::vector<Broadphase::CollisionPair>& Broadphase::SweepAndPrune(std::vector<Body>& bodies)
 	{
 		ProjectAABSofBodiesOnToTheAxis(bodies);
 		SortProjections();
 		CreateCollisionPairs(bodies);
-		return collisionPairs;
+		return this->collisionPairs;
 	}
 	void Broadphase::ProjectAABSofBodiesOnToTheAxis(std::vector<Body>& bodies)
 	{
-		projectedAABBS.clear();
-		projectedAABBS.reserve(bodies.size());
+		projectedAABBS.resize(bodies.size());
 
 		for (int i = 0; i < bodies.size(); i++)
 		{
@@ -36,22 +31,22 @@ namespace Cacti
 
 			float projectionRadius = b.WidthX() * 0.5f * fabsf(projectionAxis.x) + b.WidthY() * 0.5f * fabsf(projectionAxis.y) + b.WidthZ() * 0.5f * fabsf(projectionAxis.z);
 
-			Projection1D projection{ projectedCenterOnToAxis - projectionRadius, projectedCenterOnToAxis + projectionRadius, i };
-
-			projectedAABBS.push_back(projection);
+			projectedAABBS[i] = { projectedCenterOnToAxis - projectionRadius, projectedCenterOnToAxis + projectionRadius, i };
 		}
 	}
 	void Broadphase::SortProjections()
 	{
-		std::sort(projectedAABBS.begin(), projectedAABBS.end(), [](const Projection1D& a, const Projection1D& b)
+		for (int i = 1; i < (int)projectedAABBS.size(); i++)
+		{
+			Projection1D key = projectedAABBS[i];
+			int j = i - 1;
+			while (j >= 0 && projectedAABBS[j].left > key.left)
 			{
-				if (a.left != b.left)
-				{
-					return a.left < b.left;
-				}
-
-				return a.right < b.right;
-			});
+				projectedAABBS[j + 1] = projectedAABBS[j];
+				j--;
+			}
+			projectedAABBS[j + 1] = key;
+		}
 	}
 
 	void Broadphase::CreateCollisionPairs(std::vector<Body>& bodies)
@@ -63,7 +58,7 @@ namespace Cacti
 			{
 				if (projectedAABBS[j].left > projectedAABBS[i].right)
 				{
-					continue;
+					break;
 				}
 				collisionPairs.push_back({
 					&bodies[projectedAABBS[i].bodyIndex],

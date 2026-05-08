@@ -18,6 +18,7 @@ namespace Cacti
 		void Update(float dt);
 
 		World world;
+
 		TransformBuffer transformBuffer;
 		ContactBuffer contactBuffer;
 		AABBBuffer aabbBuffer;

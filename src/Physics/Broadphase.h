@@ -22,19 +22,19 @@ namespace Cacti
 			Body* b;
 		};
 
-		Broadphase();
+		Broadphase(int bodiesSize);
 		~Broadphase() = default;
 
-		static Vec3 projectionAxis;
+		Vec3 projectionAxis;
 
-		static std::vector<Projection1D> projectedAABBS;
-		static std::vector<CollisionPair> collisionPairs;
+		std::vector<Projection1D> projectedAABBS;
+		std::vector<CollisionPair> collisionPairs;
 
-		static std::vector<CollisionPair>& SweepAndPrune(std::vector<Body>& bodies);
+		std::vector<CollisionPair>& SweepAndPrune(std::vector<Body>& bodies);
 	private:
-		static void ProjectAABSofBodiesOnToTheAxis(std::vector<Body>& bodies);
-		static void SortProjections();
-		static void CreateCollisionPairs(std::vector<Body>& bodies);
+		void ProjectAABSofBodiesOnToTheAxis(std::vector<Body>& bodies);
+		void SortProjections();
+		void CreateCollisionPairs(std::vector<Body>& bodies);
 
 	};
 
