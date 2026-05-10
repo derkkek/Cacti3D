@@ -8,7 +8,7 @@ namespace Cacti
 	class Body
 	{
 	public:
-		Body(std::unique_ptr<Shape> shape, Vec3 position, Vec3 linearVel = Vec3(0,0,0), Vec3 angularVel = Vec3(0, 0, 0), float e = 0.5f, float friction = 0.5f, float invMass = 0.5);
+		Body(std::unique_ptr<Shape> shape, Vec3 position, Vec3 linearVel = Vec3(0,0,0), Vec3 angularVel = Vec3(0, 0, 0), float e = 0.5f, float friction = 0.5f, float invMass = 1.0f);
 
 		void Update(float dt);
 		Vec3 position;
