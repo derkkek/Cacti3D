@@ -53,7 +53,7 @@ namespace Cacti
 		//Quaternion dq = Quaternion(dAngle, dAngle.GetMagnitude());
 		//this->orientation = dq * this->orientation;
 		//this->orientation.Normalize();
-		position = positionCM + deltaRotation.RotatePoint(cmToPos);
+		position = positionCM +deltaRotation.RotatePoint(cmToPos);
 
 	}
 

@@ -112,5 +112,15 @@ RenderModel Program::BuildRenderModelFromPhysicsGeometry(Cacti::Body& body, Cact
 
 		return sphereObj;
 	}
+	else if (shape->GetType() == Cacti::ShapeType::BOX)
+	{
+		Cacti::Box* boxShape = (Cacti::Box*)shape;
+		Model box = LoadModelFromMesh(GenMeshCube(boxShape->width, boxShape->height, boxShape->depth));
+		Vector3 raylibPos = { body.position.x, body.position.y, body.position.z };
+		Color randomColor = colorList[dist(gen)];
+		RenderModel boxObj{ box, randomColor };
+		return boxObj;
+	}
+
 	return RenderModel();
 }
