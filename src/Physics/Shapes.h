@@ -89,7 +89,7 @@ namespace Cacti
 	{
 	public:
 		Box(float width, float height, float depth)
-			:width(width), height(height), depth(depth), Shape(Vec3(width / 2.0f, height / 2.0f, depth / 2.0f))
+			:width(width), height(height), depth(depth), Shape(Vec3(0.0f, 0.0f, 0.0f))
 		{
 			Build();
 		}

@@ -44,15 +44,14 @@ namespace Cacti
 		Vec3 alpha = inertiaTensor.Inverse() * (angularVelocity.Cross(inertiaTensor * angularVelocity));
 		angularVelocity += alpha * dt;
 
-		Vec3 angle = angularVelocity * dt;
-
-		Vec3 axis = angularVelocity.Normalized(); // this doesn't normalize velocity compeletly. Returns a copy, so we don't lose actual angular velocity.
-		Quaternion deltaRotation(axis, angle.GetMagnitude());
-		this->orientation = deltaRotation * this->orientation; // this order works for world space rotations.
+		Vec3 dAngle = angularVelocity * dt;
+		Vec3 axis = dAngle.Normalized();
+		Quaternion dq = Quaternion(axis, dAngle.GetMagnitude());
+		this->orientation = dq * this->orientation;
 		this->orientation.Normalize();
 
-		position = positionCM + deltaRotation.RotatePoint(cmToPos);
-		angularVelocity *= 0.995f;
+		position = positionCM + dq.RotatePoint(cmToPos);
+
 	}
 
 	Vec3 Body::WorldSpaceToLocalSpace(const Vec3 p)

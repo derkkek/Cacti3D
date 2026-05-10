@@ -20,7 +20,7 @@ namespace Cacti
 
 		//bodies.emplace_back(std::make_unique<Sphere>(1), Vec3(-100, 3, 0), Vec3(200,0,0), Vec3(0, 0, 0), 1.0f, 0.5f, 1.0f);
 		//bodies.emplace_back(std::make_unique<Sphere>(1), Vec3(0, 3, 0), Vec3(-2, 0, 0), Vec3(0, 0, 0), 1.0f, 0.5f, 1.0f);
-		bodies.emplace_back(std::make_unique<Box>(5.0f, 5.0f, 5.0f), Vec3(0, 10, 0));
+		bodies.emplace_back(std::make_unique<Box>(5.0f, 5.0f, 5.0f), Vec3(0, 10, 0), Vec3(0, 0, 0), Vec3(0.0f, 0.0f, 0.0f));
 		//bodies.emplace_back(std::make_unique<Sphere>(1000), Vec3(0, -1000, 0));
 
 	}
