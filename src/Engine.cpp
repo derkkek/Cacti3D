@@ -43,11 +43,15 @@ namespace Cacti
 		//}
 	}
 
-	void Engine::UpdateAABBBuffer()
+	void Engine::UpdateAABBBuffer(const float dt)
 	{
 		for (int i = 0; i < world.bodies.size(); i++)
 		{
-			aabbBuffer.aabbs[i] = world.bodies[i].shape->GetAABBWorldSpace(world.bodies[i].position, world.bodies[i].orientation);
+			AABB bb = world.bodies[i].shape->GetAABBWorldSpace(world.bodies[i].position, world.bodies[i].orientation);
+			bb.ExpandToContainPoint(bb.min + world.bodies[i].linearVelocity * dt);
+			bb.ExpandToContainPoint(bb.max + world.bodies[i].linearVelocity * dt);
+
+			aabbBuffer.aabbs[i] = bb;
 		}
 	}
 
@@ -56,6 +60,6 @@ namespace Cacti
 		world.Update(dt);
 		UpdateTransformBuffer();
 		UpdateContactBuffer();
-		UpdateAABBBuffer();
+		UpdateAABBBuffer(dt);
 	}
 }

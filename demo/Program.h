@@ -20,6 +20,9 @@ private:
 	Renderer renderer;
 	Cacti::Engine engine;
 	bool running;
+	bool paused = true;
+	bool step = false;
+
 
 	ConvertedSceneData convertedSceneData;
 };

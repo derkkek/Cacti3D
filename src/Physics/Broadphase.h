@@ -30,9 +30,9 @@ namespace Cacti
 		std::vector<Projection1D> projectedAABBS;
 		std::vector<CollisionPair> collisionPairs;
 
-		std::vector<CollisionPair>& SweepAndPrune(std::vector<Body>& bodies);
+		std::vector<CollisionPair>& SweepAndPrune(std::vector<Body>& bodies, const float dt);
 	private:
-		void ProjectAABSofBodiesOnToTheAxis(std::vector<Body>& bodies);
+		void ProjectAABSofBodiesOnToTheAxis(std::vector<Body>& bodies, const float dt);
 		void SortProjections();
 		void CreateCollisionPairs(std::vector<Body>& bodies);
 

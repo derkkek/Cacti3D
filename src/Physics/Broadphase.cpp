@@ -8,14 +8,14 @@ namespace Cacti
 		projectedAABBS.reserve(bodiesSize);
 		collisionPairs.reserve(bodiesSize * 4);
 	}
-	std::vector<Broadphase::CollisionPair>& Broadphase::SweepAndPrune(std::vector<Body>& bodies)
+	std::vector<Broadphase::CollisionPair>& Broadphase::SweepAndPrune(std::vector<Body>& bodies, const float dt)
 	{
-		ProjectAABSofBodiesOnToTheAxis(bodies);
+		ProjectAABSofBodiesOnToTheAxis(bodies, dt);
 		SortProjections();
 		CreateCollisionPairs(bodies);
 		return this->collisionPairs;
 	}
-	void Broadphase::ProjectAABSofBodiesOnToTheAxis(std::vector<Body>& bodies)
+	void Broadphase::ProjectAABSofBodiesOnToTheAxis(std::vector<Body>& bodies, const float dt)
 	{
 		projectedAABBS.resize(bodies.size());
 
@@ -24,6 +24,8 @@ namespace Cacti
 			Body &body = bodies[i];
 
 			AABB b = body.shape->GetAABBWorldSpace(body.position, body.orientation);
+			b.ExpandToContainPoint(b.min + body.linearVelocity * dt);
+			b.ExpandToContainPoint(b.max + body.linearVelocity * dt);
 
 			Vec3 C = b.GetCenter();
 
@@ -36,17 +38,15 @@ namespace Cacti
 	}
 	void Broadphase::SortProjections()
 	{
-		for (int i = 1; i < (int)projectedAABBS.size(); i++)
-		{
-			Projection1D key = projectedAABBS[i];
-			int j = i - 1;
-			while (j >= 0 && projectedAABBS[j].left > key.left)
+		std::sort(projectedAABBS.begin(), projectedAABBS.end(), [](const Projection1D& a, const Projection1D& b)
 			{
-				projectedAABBS[j + 1] = projectedAABBS[j];
-				j--;
-			}
-			projectedAABBS[j + 1] = key;
-		}
+				if (a.left != b.left)
+				{
+					return a.left < b.left;
+				}
+
+				return a.right < b.right;
+			});
 	}
 
 	void Broadphase::CreateCollisionPairs(std::vector<Body>& bodies)

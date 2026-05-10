@@ -25,7 +25,7 @@ namespace Cacti
 	private:
 		void UpdateTransformBuffer();
 		void UpdateContactBuffer();
-		void UpdateAABBBuffer();
+		void UpdateAABBBuffer(const float dt);
 	};
 
 }

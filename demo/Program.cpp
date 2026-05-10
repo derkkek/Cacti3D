@@ -10,7 +10,7 @@
 #include <random>
 
 Program::Program()
-	:running(true), convertedSceneData{}
+	:running(true), paused(true), step(false), convertedSceneData{}
 {
 	Init();
 	engine.Init();
@@ -52,30 +52,35 @@ void Program::InitScene()
 void Program::Update()
 {
 	float elapsed = 0.0f;
-	const float frameDelay = 0.5f;
 
 	while (!WindowShouldClose())
 	{
-		float dt = GetFrameTime();
+		if (IsKeyPressed(KEY_P)) paused = !paused;
+		if (IsKeyPressed(KEY_O)) step = true;
 
-
-		engine.Update(dt);
-		//convertedSceneData.contacts.resize(engine.world.contacts.size());
-
-		for (int i = 0; i < engine.world.bodies.size(); i++)
+		if (!paused ||step)
 		{
-			const Cacti::Vec3 p = engine.transformBuffer.positions[i];
-			const Cacti::Quaternion q = engine.transformBuffer.orientations[i];
-			const Cacti::AABB aabb = engine.aabbBuffer.aabbs[i];
+			float dt = GetFrameTime();
 
-			convertedSceneData.positions[i] = { p.x, p.y, p.z };
-			convertedSceneData.orientations[i] = { q.x, q.y , q.z, q.w };
-			convertedSceneData.bbs[i] = {Vector3(aabb.min.x, aabb.min.y, aabb.min.z), Vector3(aabb.max.x, aabb.max.y, aabb.max.z) };
+			engine.Update(dt);
 
+			for (int i = 0; i < engine.world.bodies.size(); i++)
+			{
+				const Cacti::Vec3 p = engine.transformBuffer.positions[i];
+				const Cacti::Quaternion q = engine.transformBuffer.orientations[i];
+				const Cacti::AABB aabb = engine.aabbBuffer.aabbs[i];
+
+				convertedSceneData.positions[i] = { p.x, p.y, p.z };
+				convertedSceneData.orientations[i] = { q.x, q.y , q.z, q.w };
+				convertedSceneData.bbs[i] = { Vector3(aabb.min.x, aabb.min.y, aabb.min.z), Vector3(aabb.max.x, aabb.max.y, aabb.max.z) };
+			}
+
+			step = false;
 		}
 
-
 		renderer.Update(convertedSceneData);
+
+		//convertedSceneData.contacts.resize(engine.world.contacts.size());
 	}
 }
 

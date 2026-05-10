@@ -17,19 +17,9 @@ namespace Cacti
 	{
 		bodies.reserve(MaxBodies);
 		contacts.resize(MaxBodies * 4, Contact{});
-	/*	bodies.emplace_back(std::make_unique<Sphere>(1), Vec3(-100, 3, 0), Vec3(500,0,0), Vec3(0, 0, 0), 1.0f, 0.5f, 1.0f);
-		bodies.emplace_back(std::make_unique<Sphere>(1), Vec3(100, 3, 0), Vec3(0, 0, 0), Vec3(0, 0, 0), 1.0f, 0.5f, 1.0f);*/
-		for(int x = 0; x < 25; x++) 
-		{
-			for(int z = 0; z < 25; z++) 
-			{
-				float radius = 0.5f;
-				float xx = float(x - 1) * radius * 5.5f;
-				float zz = float(z - 1) * radius * 5.5f;
-				bodies.emplace_back(std::make_unique<Sphere>(radius), Vec3(xx, 10, zz), Vec3(0, 0, 0), Vec3(0, 0, 0), 1.0f, 0.5f, 1.0f);
-			}
-		}
 
+		bodies.emplace_back(std::make_unique<Sphere>(1), Vec3(-100, 3, 0), Vec3(2000,0,0), Vec3(0, 0, 0), 1.0f, 0.5f, 1.0f);
+		bodies.emplace_back(std::make_unique<Sphere>(1), Vec3(0, 3, 0), Vec3(0, 0, 0), Vec3(0, 0, 0), 1.0f, 0.5f, 1.0f);
 
 		bodies.emplace_back(std::make_unique<Sphere>(1000), Vec3(0, -1000, 0));
 
@@ -43,7 +33,7 @@ namespace Cacti
 
 		numContacts = 0;
 
-		std::vector<Broadphase::CollisionPair>& collisionPairs = broadPhase.SweepAndPrune(bodies);
+		std::vector<Broadphase::CollisionPair>& collisionPairs = broadPhase.SweepAndPrune(bodies, dt);
 
 		for (int i = 0; i < collisionPairs.size(); i++)
 		{
@@ -61,13 +51,7 @@ namespace Cacti
 
 			}
 		}
-		std::cout << "Brute Force Test Count: " << ((bodies.size() * (bodies.size() - 1))) / 2 << "\n";
 		
-		std::cout << "Collision Pairs Count: " << collisionPairs.size() << "\n";
-
-		std::cout << "Found Contacts Count: " << numContacts << "\n";
-
-
 
 		if (numContacts > 1)
 		{
