@@ -9,7 +9,8 @@ namespace Cacti
 	enum ShapeType
 	{
 		SPHERE,
-		BOX
+		BOX,
+		CONVEX
 	};
 
 	class Shape
@@ -33,7 +34,7 @@ namespace Cacti
 
 		virtual AABB GetAABBWorldSpace(const Vec3& pos, const Quaternion& orient) = 0;
 
-		virtual float FastestLinearSpeed(const Vec3 linearVel, const Vec3 angularVel, const Vec3 dir)
+		virtual float FastestLinearSpeed(const Vec3 angularVel, const Vec3 dir)
 		{
 			return 0.0f;
 		}
@@ -164,27 +165,11 @@ namespace Cacti
 		{
 			AABB aabb;
 
-			//for (int i = 0; i < 8; i++)
-			//{
-			//	Vec3 worldCoordVertex = orient.RotatePoint(vertices[i]) + pos;
-			//	aabb.ExpandToContainPoint(worldCoordVertex);
-			//}
-			//return aabb;
-
-			/* Below is optimized version for "boxes" */
-			Mat3 R = orient.ToMat3();
-
-			Vec3 e = Vec3(width * 0.5f, height * 0.5f, depth * 0.5f);
-
-			float halfExtentsX = R.rows[0][0] * e.x + R.rows[0][1] * e.y + R.rows[0][2] * e.z;
-			float halfExtentsY = R.rows[1][0] * e.x + R.rows[1][1] * e.y + R.rows[1][2] * e.z;
-			float halfExtentsZ = R.rows[2][0] * e.x + R.rows[2][1] * e.y + R.rows[2][2] * e.z;
-
-			Vec3 halfExtents(halfExtentsX, halfExtentsY, halfExtentsZ);
-
-			aabb.min = pos - halfExtents;
-			aabb.max = pos + halfExtents;
-
+			for (int i = 0; i < 8; i++)
+			{
+				Vec3 worldCoordVertex = orient.RotatePoint(vertices[i]) + pos;
+				aabb.ExpandToContainPoint(worldCoordVertex);
+			}
 			return aabb;
 		}
 
@@ -238,5 +223,93 @@ namespace Cacti
 	private:
 
 	};
+
+	class Convex : public Shape
+	{
+	public:
+		Convex();
+		~Convex();
+
+		const ShapeType GetType() override
+		{
+			return CONVEX;
+		}
+
+		Vec3 GetCenterOfMass() const override
+		{
+			//TODO
+			return centerOfMass;
+		}
+
+		Mat3 GetInertiaTensor() const override
+		{
+			//TODO
+			return Mat3{};
+		}
+
+		AABB GetAABBWorldSpace(const Vec3& pos, const Quaternion& orient)
+		{
+			AABB aabb;
+			for (int i = 0; i < hullPoints.size(); i++)
+			{
+				const Vec3 worldCoord = orient.RotatePoint(hullPoints[i]) + pos;
+				aabb.ExpandToContainPoint(worldCoord);
+			}
+			return aabb;
+		}
+
+		float FastestLinearSpeed(const Vec3 angularVel, const Vec3 dir) override
+		{
+			float maxPointSpeed = 0.0f;
+
+			for (int i = 0; i < hullPoints.size(); i++)
+			{
+				const Vec3 r = hullPoints[i] - centerOfMass;
+				const Vec3 pointVel = angularVel.Cross(r);
+				const float speed = pointVel.Dot(dir);
+				if (speed > maxPointSpeed)
+				{
+					maxPointSpeed = speed;
+				}
+			}
+			return maxPointSpeed;
+		}
+
+		Vec3 Support(Vec3 dir, const Vec3 pos, const Quaternion quat) override
+		{
+			float max = -INFINITY;
+			int index = 0;
+			Vec3 support(max, max, max);
+
+			float bias = 0.025f;
+
+			for (int i = 0; i < 8; i++)
+			{
+				Vec3 vertexWorldCoord = quat.RotatePoint(hullPoints[i]) + pos;
+				//Imagine, carry the vertex position vector's starting point to the direction vector's and project it to the direction
+				float dot = vertexWorldCoord.Dot(dir);
+
+				//if projection is bigger than the current one, then this point is further from the direction.
+				if (dot > max)
+				{
+					max = dot;
+					index = i;
+					support = vertexWorldCoord;
+				}
+			}
+			return support + (dir.Normalize() * bias);
+		}
+
+		void Build() override
+		{
+
+		}
+
+		std::vector<Vec3> hullPoints;
+
+	private:
+
+	};
+
 
 }
