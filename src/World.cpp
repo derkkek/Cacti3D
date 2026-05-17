@@ -4,20 +4,13 @@
 #include <Contact.h>
 #include <algorithm>
 #include "Physics/Broadphase.h"
+#include "Math/GeoHelpers.h"
 namespace Cacti
 {
 	World::World()
 		:MaxBodies(700), broadPhase(MaxBodies)
 	{
-		Vec3 top = Vec3(0,4,0);
-		Vec3 bl = Vec3(-4,0,0);
-		Vec3 br = Vec3(4,0,0);
-		Vec3 depth = Vec3(0, 0, 4);
-		std::vector<Vec3> points = { top, bl, br, depth };
-		Tetrahedron t = Vec3::BuildTetrahedron(points);
-		Vec3 surfaceNormal = (t.vertices[t.triangles[0].b] - t.vertices[t.triangles[0].a]).Cross((t.vertices[t.triangles[0].c] - t.vertices[t.triangles[0].a]));
-		float dist = Vec3::DistanceToPointFromTriangle(t.triangles[0].a, t.triangles[0].b, t.triangles[0].c, depth);
-		std::cout << dist << "\n";
+
 	}
 	World::~World()
 	{
