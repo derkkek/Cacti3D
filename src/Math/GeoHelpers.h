@@ -26,6 +26,8 @@ namespace Cacti
 		static Vec3 FindFurthestPointFromLine(const Vec3& lineStart, const Vec3& lineEnd, const std::vector<Vec3>& points);
 		static Vec3 FindFurthestPointFromTriangle(const Vec3& a, const Vec3& b, const Vec3& c, const std::vector<Vec3>& points);
 		static Tetrahedron BuildTetrahedron(const std::vector<Vec3>& points);
+		static std::vector<Vec3> BuildConvexHull(const std::vector<Vec3>& points);
+		static std::vector<Vec3> RemoveInternalPointsOfTetrahedron(Tetrahedron& t);
 	};
 
 
@@ -152,5 +154,15 @@ namespace Cacti
 		t.triangles = { t1, t2, t3, t4 };
 
 		return t;
+	}
+	inline std::vector<Vec3> GeoHelpers::BuildConvexHull(const std::vector<Vec3>& points)
+	{
+		Tetrahedron tetra = BuildTetrahedron(points);
+		std::vector<Vec3> tetraSurfacePoints = RemoveInternalPointsOfTetrahedron(tetra);
+		return std::vector<Vec3>();
+	}
+	inline std::vector<Vec3> GeoHelpers::RemoveInternalPointsOfTetrahedron(Tetrahedron& t)
+	{
+		return std::vector<Vec3>();
 	}
 }
