@@ -23,11 +23,16 @@ namespace Cacti
 		static Vec3 FindPointFurthestInDirection(const Vec3& dir, const std::vector<Vec3>& points);
 		static float DistanceToPointFromLine(const Vec3& lineStart, const Vec3& lineEnd, const Vec3& pt);
 		static float DistanceToPointFromTriangle(const Vec3& a, const Vec3& b, const Vec3& c, const Vec3& pt);
+		static float DistanceToPointFromTetrahedron(const Tetrahedron& t, const Vec3& pt, const std::vector<Vec3>& points);
 		static Vec3 FindFurthestPointFromLine(const Vec3& lineStart, const Vec3& lineEnd, const std::vector<Vec3>& points);
 		static Vec3 FindFurthestPointFromTriangle(const Vec3& a, const Vec3& b, const Vec3& c, const std::vector<Vec3>& points);
 		static Tetrahedron BuildTetrahedron(const std::vector<Vec3>& points);
+
 		static std::vector<Vec3> BuildConvexHull(const std::vector<Vec3>& points);
-		static std::vector<Vec3> RemoveInternalPointsOfTetrahedron(Tetrahedron& t);
+		static std::vector<Vec3> RemoveInternalPointsOfTetrahedron(Tetrahedron& t, const std::vector<Vec3>& points);
+		static bool IsPointInsideTetrahedron(const Vec3& p, const std::vector<Vec3>& points, const Tetrahedron& t);
+		static std::vector<Triangle> TrianglesFacePoint(const Vec3 p, const Tetrahedron& t);
+		static std::vector<Triangle> FindDanglingEdgesAndConstructTriangles(const std::vector<Vec3>& points);
 	};
 
 
@@ -69,10 +74,29 @@ namespace Cacti
 		Vec3 triangleNormal = ab.Cross(bc);
 		triangleNormal.Normalize();
 
+		const Vec3 ray = pt - a;
 		// perp distance in depth. Think like triangle lays on a table surface.
-		const float dist = pt.Dot(triangleNormal);
+		const float dist = ray.Dot(triangleNormal);
 
 		return dist;
+	}
+
+	inline float GeoHelpers::DistanceToPointFromTetrahedron(const Tetrahedron& t, const Vec3& pt, const std::vector<Vec3>& points)
+	{
+		float minDistance = DistanceToPointFromTriangle(t.vertices[t.triangles[0].a], t.vertices[t.triangles[0].b], t.vertices[t.triangles[0].c], pt);
+
+		for (int i = 1; i < t.triangles.size(); i++)
+		{
+			Triangle surface = t.triangles[i];
+
+			const float dist = DistanceToPointFromTriangle(t.vertices[surface.a], t.vertices[surface.b], t.vertices[surface.c], pt);
+
+			if (dist < minDistance)
+			{
+				minDistance = dist;
+			}
+		}
+		return minDistance;
 	}
 
 	/*c++ native, consider changing vector input by array pointer.*/
@@ -97,7 +121,7 @@ namespace Cacti
 		float maxDist = DistanceToPointFromTriangle(a, b, c, points[0]);
 
 		int index = 0;
-		for (int i = i; i < points.size(); i++)
+		for (int i = 1; i < points.size(); i++)
 		{
 			const float dist = DistanceToPointFromTriangle(a, b, c, points[i]);
 			if (dist * dist > maxDist * maxDist)
@@ -155,14 +179,62 @@ namespace Cacti
 
 		return t;
 	}
+
+	inline bool GeoHelpers::IsPointInsideTetrahedron(const Vec3& p, const std::vector<Vec3>& points, const Tetrahedron& t)
+	{
+		const float dist = DistanceToPointFromTetrahedron(t, p, points);
+
+		if (dist < 0.0f)
+		{
+			return true;
+		}
+
+		return false;
+	}
+
+	inline std::vector<Vec3> GeoHelpers::RemoveInternalPointsOfTetrahedron(Tetrahedron& t, const std::vector<Vec3>& points)
+	{
+		std::vector<Vec3> externalPoints = points;
+		for (int i = 0; i < externalPoints.size(); i++)
+		{
+			if (IsPointInsideTetrahedron(externalPoints[i], points, t))
+			{
+				//swap
+				Vec3 current = externalPoints[i];
+				Vec3 last = externalPoints[externalPoints.size() - 1];
+				externalPoints[externalPoints.size() - 1] = current;
+				externalPoints[i] = last;
+
+				externalPoints.pop_back();
+				i--;
+			}
+		}
+		return externalPoints;
+	}
+	std::vector<Triangle> GeoHelpers::TrianglesFacePoint(const Vec3 p, const Tetrahedron& t)
+	{
+		std::vector<Triangle> faces;
+		for (int i = 0; i < t.triangles.size(); i++)
+		{
+			const Triangle face = t.triangles[i];
+
+			if (DistanceToPointFromTriangle(t.vertices[face.a], t.vertices[face.b], t.vertices[face.c], p) > 0.001f)
+			{
+				faces.push_back(face);
+			}
+		}
+	}
+	inline std::vector<Triangle> GeoHelpers::FindDanglingEdgesAndConstructTriangles(const std::vector<Vec3>& points)
+	{
+		return std::vector<Triangle>();
+	}
 	inline std::vector<Vec3> GeoHelpers::BuildConvexHull(const std::vector<Vec3>& points)
 	{
 		Tetrahedron tetra = BuildTetrahedron(points);
-		std::vector<Vec3> tetraSurfacePoints = RemoveInternalPointsOfTetrahedron(tetra);
-		return std::vector<Vec3>();
-	}
-	inline std::vector<Vec3> GeoHelpers::RemoveInternalPointsOfTetrahedron(Tetrahedron& t)
-	{
+		std::vector<Vec3> externalPointsTetra = RemoveInternalPointsOfTetrahedron(tetra, points);
+		Vec3 furthestPointInDir = FindPointFurthestInDirection(externalPointsTetra[0], externalPointsTetra);
+		std::vector<Triangle> trianglesFacePoint = TrianglesFacePoint(furthestPointInDir, tetra);
+
 		return std::vector<Vec3>();
 	}
 }
