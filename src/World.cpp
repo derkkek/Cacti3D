@@ -25,6 +25,9 @@ namespace Cacti
 		bodies.emplace_back(std::make_unique<Box>(5.0f, 10.0f, 5.0f), Vec3(0, 10, 0), Vec3(0, 0, 0), Vec3(1.0f, 1.0f, 1.0f));
 		//bodies.emplace_back(std::make_unique<Sphere>(1000), Vec3(0, -1000, 0));
 
+		Cacti::RunAllConvexHullTests();
+
+
 	}
 	void World::Update(float dt)
 	{

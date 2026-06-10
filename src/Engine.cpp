@@ -1,5 +1,5 @@
 #include "Engine.h"
-#include "Engine.h"
+
 
 namespace Cacti
 {
@@ -17,6 +17,8 @@ namespace Cacti
 		transformBuffer.Init(world.MaxBodies);
 		contactBuffer.Init(world.MaxBodies * world.MaxBodies);
 		aabbBuffer.Init(world.MaxBodies);
+
+
 	}
 
 	void Cacti::Engine::UpdateTransformBuffer()
