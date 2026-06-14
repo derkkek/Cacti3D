@@ -1,6 +1,7 @@
 #pragma once
 #include "Vector.h"
 #include <vector>
+#include "qhull/libqhull_r.h"
 namespace Cacti
 {
 	struct Triangle
@@ -207,7 +208,7 @@ namespace Cacti
 	inline bool GeoHelpers::IsPointInsideTetrahedron(const Vec3& p, const Tetrahedron& t)
 	{
 		// Eðer en büyük mesafe bile 0'dan küçükse, tüm yüzeylerin arkasýndadýr (içeridedir)
-		return MaxDistanceToPointFromTetrahedron(t, p) <= 0.001f;
+		return MaxDistanceToPointFromTetrahedron(t, p) < -0.001f;
 	}
 
 	inline std::vector<Vec3> GeoHelpers::RemoveInternalPointsOfTetrahedron(Tetrahedron& t, const std::vector<Vec3>& points)
@@ -310,14 +311,37 @@ namespace Cacti
 		// Get all points that are outside the initial tetrahedron.
 		std::vector<Vec3> externalPoints = RemoveInternalPointsOfTetrahedron(hull, points);
 
+		for (const Vec3& hv : hull.vertices)
+		{
+			externalPoints.erase(
+				std::remove_if(externalPoints.begin(), externalPoints.end(),
+					[&](const Vec3& p) { return p == hv; }),
+				externalPoints.end());
+		}
+
 		while (!externalPoints.empty())
 		{
 			// Pick any external point. Using externalPoints[0] as the direction
 			// is what you had — but we actually want the point itself, not the
 			// furthest point in its direction. We want to add one external point
 			// per iteration. Use index 0 and remove it.
-			Vec3 newPoint = externalPoints[0];
-			externalPoints.erase(externalPoints.begin());
+			int bestIdx = 0;
+			float bestDist = -FLT_MAX;
+			for (int i = 0; i < (int)externalPoints.size(); i++)
+			{
+				// Use the maximum signed distance across all faces as the "how exterior" measure
+				float d = -FLT_MAX;
+				for (const Triangle& tri : hull.triangles)
+				{
+					float fd = DistanceToPointFromTriangle(
+						hull.vertices[tri.a], hull.vertices[tri.b], hull.vertices[tri.c],
+						externalPoints[i]);
+					if (fd > d) d = fd;
+				}
+				if (d > bestDist) { bestDist = d; bestIdx = i; }
+			}
+			Vec3 newPoint = externalPoints[bestIdx];
+			externalPoints.erase(externalPoints.begin() + bestIdx);
 
 			// Find which hull triangles face this new point.
 			std::vector<Triangle> facing = TrianglesFacePoint(newPoint, hull);
@@ -494,7 +518,7 @@ namespace Cacti
 	{
 		T1_tetrahedron_input_gives_4_vertices();
 		T2_cube_input_gives_8_vertices();
-		//T3_interior_points_excluded();
+		T3_interior_points_excluded();
 		//T4_all_inputs_inside_hull();
 		T5_outward_facing_normals();
 		T6_duplicate_points_no_crash();

@@ -11,11 +11,13 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(raylib)
 
 file(GLOB_RECURSE PHYSICS_SOURCES src/*.cpp)
+file(GLOB QHULL_SOURCES src/vendor/qhull/*.c)
 
-add_library(physics STATIC ${PHYSICS_SOURCES})
+add_library(physics STATIC ${PHYSICS_SOURCES} ${QHULL_SOURCES})
 
 target_include_directories(physics
     PUBLIC src  # expose headers to consumers
+    PRIVATE src/vendor
 )
 
 file(GLOB_RECURSE DEMO_SOURCES demo/*.cpp)
